@@ -12,9 +12,9 @@ const onwarn = (warning, warn) => {
 };
 
 export default {
-  input: 'src/boilerplate-card.ts',
+  input: 'src/crop-planner-card.ts',
   output: {
-    file: './dist/boilerplate-card.js',
+    file: './dist/crop-planner-card.js',
     format: 'es',
     inlineDynamicImports: true,
   },
