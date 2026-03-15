@@ -1,4 +1,4 @@
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 
@@ -11,6 +11,13 @@ export class CropPlannerCard extends LitElement {
 
   private _config!: CropPlannerCardConfig;
   private _cards: any[] = [];
+
+  static styles = css`
+    .container {
+      max-height: calc(100vh - var(--header-height, 56px) - 48px);
+      overflow-y: auto;
+    }
+  `;
 
   static getConfigElement() {
     return document.createElement('crop-planner-card-editor');
@@ -28,31 +35,33 @@ export class CropPlannerCard extends LitElement {
     const cropEntityIds = Object.keys(this.hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
-    const cropsCard = helpers.createCardElement({
-      type: 'entities',
-      title: this._config.title ?? '',
-      entities: cropEntityIds,
-    });
 
-    const todoCard = helpers.createCardElement({
-      type: 'todo-list',
-      entity: TODO_ENTITY_ID,
-    });
-
-    this._cards = [cropsCard, todoCard];
-    this._cards.forEach((c) => (c.hass = this.hass));
-
-    cropsCard.style.cssText = 'flex: 0 0 50%; min-width: 0;';
-
-    const todoWrapper = document.createElement('div');
-    todoWrapper.style.cssText = 'flex: 0 0 50%; min-width: 0; overflow-y: auto; min-height: 0;';
-    todoWrapper.appendChild(todoCard);
+    this._cards = [helpers.createCardElement({
+        type: 'vertical-stack',
+        title: '',
+        cards: [
+                {
+                  type: 'heading',
+                  heading: this._config.title ?? 'Crop Planner',
+                  icon: 'mdi:sprout',
+                  heading_style: 'title',
+                },
+                {
+                      type: 'horizontal-stack',
+                      title: '',
+                      cards: [
+                        { type: 'entities', title: '', entities: cropEntityIds },
+                        { type: 'todo-list', entity: TODO_ENTITY_ID },
+                      ],
+                    },
+              ]
+          })
+      ];
+    this._cards[0].hass = this.hass;
 
     const container = document.createElement('div');
-    container.style.cssText = 'display: flex; flex-direction: row; max-height: calc(100vh - var(--header-height, 56px) - 48px); gap: 8px;';
-    container.appendChild(cropsCard);
-    container.appendChild(todoWrapper);
-
+    container.classList.add('container');
+    container.appendChild(this._cards[0]);
     this.shadowRoot!.appendChild(container);
   }
 
