@@ -1,8 +1,8 @@
 # Crop Planner Card
 
-A Lovelace card for the [Crop Planner](https://github.com/your-org/crop-planner-integration) Home Assistant integration.
+A Lovelace card for the [Crop Planner](https://github.com/coopnex/crop-planner) Home Assistant integration.
 
-Displays all your crops in a responsive grid with images, species, quantity, and current lifecycle phase.
+Displays all your crops with their lifecycle phases, a harvest calendar, and a chore list.
 
 ## Installation
 
@@ -27,20 +27,45 @@ resources:
 ```yaml
 type: custom:crop-planner-card
 title: My Garden
-show_images: true
 ```
 
 ## Options
 
-| Option        | Type    | Default   | Description                          |
-| ------------- | ------- | --------- | ------------------------------------ |
-| `title`       | string  | `"Crops"` | Card title                           |
-| `show_images` | boolean | `true`    | Show crop images / phase placeholder |
+| Option  | Type   | Default          | Description |
+|---------|--------|------------------|-------------|
+| `title` | string | `"Crop Planner"` | Card title  |
 
 ## Development
 
+### Setup
+
 ```bash
-npm install
-npm run build   # produces dist/crop-planner-card.js
-npm run dev     # watch mode
+yarn install
 ```
+
+### Build
+
+```bash
+yarn build       # production bundle → dist/crop-planner-card.js
+yarn start       # watch mode with dev server on http://localhost:5000
+```
+
+### Live development against Home Assistant
+
+`yarn start` compiles on save and serves the bundle at:
+
+```
+http://localhost:5000/local/crop-planner-card.js
+```
+
+Add this URL as a Lovelace resource in your HA instance (Settings → Dashboards → Resources):
+
+```yaml
+resources:
+  - url: http://localhost:5000/local/crop-planner-card.js
+    type: module
+```
+
+The dev server includes `Cache-Control: no-cache` headers and CORS enabled, so HA will always fetch the latest build. After saving a source file, reload the browser tab to pick up the changes.
+
+> **Note:** the dev build uses `esbuild` for fast transpilation without full type checking. Run `yarn build` before committing to catch any TypeScript errors.

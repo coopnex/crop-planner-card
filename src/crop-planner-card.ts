@@ -91,12 +91,11 @@ export class CropPlannerCard extends LitElement {
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: "crop-planner-card",
-  name: "Crop Planner",
+  type: 'crop-planner-card',
+  name: 'Crop Planner',
   preview: false, // Optional - defaults to false
-  description: "A custom card made by me!", // Optional
-  documentationURL:
-    "https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card", // Adds a help link in the frontend card editor
+  description: 'A Lovelace card for the Crop Planner Home Assistant integration', // Optional
+  documentationURL: 'https://github.com/coopnex/crop-planner-card', // Adds a help link in the frontend card editor
 });
 
 // ---------------------------------------------------------------------------
