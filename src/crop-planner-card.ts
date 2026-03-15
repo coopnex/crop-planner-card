@@ -6,6 +6,7 @@ import './crop-planner-harvest-card';
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
 const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
+const ENRICH_BUTTON_ENTITY_ID = 'button.enrich_crops_data';
 
 @customElement('crop-planner-card')
 export class CropPlannerCard extends LitElement {
@@ -57,6 +58,20 @@ export class CropPlannerCard extends LitElement {
                   action: 'perform-action',
                   perform_action: 'button.press',
                   target: { entity_id: AI_BUTTON_ENTITY_ID },
+                },
+              },
+              {
+                type: 'entity',
+                show_state: true,
+                show_icon: true,
+                entity: ENRICH_BUTTON_ENTITY_ID,
+                icon: 'mdi:database-refresh',
+                state_content: 'name',
+                name: { type: 'entity' },
+                tap_action: {
+                  action: 'perform-action',
+                  perform_action: 'button.press',
+                  target: { entity_id: ENRICH_BUTTON_ENTITY_ID },
                 },
               },
             ],
