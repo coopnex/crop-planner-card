@@ -1,7 +1,6 @@
 export interface CropPlannerCardConfig {
   type: string;
   title?: string;
-  show_images?: boolean;
 }
 
 export interface HassEntity {
@@ -18,13 +17,4 @@ export interface HomeAssistant {
   locale: {
     language: string;
   };
-}
-
-export interface CropAttributes {
-  friendly_name?: string;
-  quantity?: number;
-  species?: string;
-  entity_picture?: string;
-  phases?: Record<string, { start?: string; end?: string }>;
-  icon?: string;
 }
