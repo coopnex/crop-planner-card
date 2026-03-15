@@ -30,7 +30,7 @@ export class CropPlannerCard extends LitElement {
 
     const cropsCard = helpers.createCardElement({
       type: 'entities',
-      title: this._config.title ?? 'Crops',
+      title: this._config.title ?? '',
       entities: cropEntityIds,
     });
 
@@ -49,7 +49,7 @@ export class CropPlannerCard extends LitElement {
     todoWrapper.appendChild(todoCard);
 
     const container = document.createElement('div');
-    container.style.cssText = 'display: flex; flex-direction: row; max-height: 100vh; gap: 8px;';
+    container.style.cssText = 'display: flex; flex-direction: row; max-height: calc(100vh - var(--header-height, 56px) - 48px); gap: 8px;';
     container.appendChild(cropsCard);
     container.appendChild(todoWrapper);
 
