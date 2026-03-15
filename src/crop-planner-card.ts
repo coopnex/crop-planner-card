@@ -10,7 +10,7 @@ export class CropPlannerCard extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
 
   private _config!: CropPlannerCardConfig;
-  private _stack?: any;
+  private _cards: any[] = [];
 
   static getConfigElement() {
     return document.createElement('crop-planner-card-editor');
@@ -26,30 +26,39 @@ export class CropPlannerCard extends LitElement {
 
   async firstUpdated() {
     const cropEntityIds = Object.keys(this.hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
-
     const helpers = await (window as any).loadCardHelpers();
-    this._stack = helpers.createCardElement({
-      type: 'horizontal-stack',
-      title: this._config.title ?? 'Crop Planner',
-      cards: [
-        {
-          type: 'entities',
-          title: '',
-          entities: cropEntityIds,
-        },
-        {
-          type: 'todo-list',
-          entity: TODO_ENTITY_ID,
-        },
-      ],
+
+    const cropsCard = helpers.createCardElement({
+      type: 'entities',
+      title: this._config.title ?? 'Crops',
+      entities: cropEntityIds,
     });
-    this._stack.hass = this.hass;
-    this.shadowRoot!.appendChild(this._stack);
+
+    const todoCard = helpers.createCardElement({
+      type: 'todo-list',
+      entity: TODO_ENTITY_ID,
+    });
+
+    this._cards = [cropsCard, todoCard];
+    this._cards.forEach((c) => (c.hass = this.hass));
+
+    cropsCard.style.cssText = 'flex: 0 0 50%; min-width: 0;';
+
+    const todoWrapper = document.createElement('div');
+    todoWrapper.style.cssText = 'flex: 0 0 50%; min-width: 0; overflow-y: auto; min-height: 0;';
+    todoWrapper.appendChild(todoCard);
+
+    const container = document.createElement('div');
+    container.style.cssText = 'display: flex; flex-direction: row; max-height: 100vh; gap: 8px;';
+    container.appendChild(cropsCard);
+    container.appendChild(todoWrapper);
+
+    this.shadowRoot!.appendChild(container);
   }
 
   updated(changedProps: Map<string, unknown>) {
-    if (changedProps.has('hass') && this._stack) {
-      this._stack.hass = this.hass;
+    if (changedProps.has('hass')) {
+      this._cards.forEach((c) => (c.hass = this.hass));
     }
   }
 
