@@ -82,6 +82,8 @@ export const harvestCardStyles = css`
   .months-header {
     display: flex;
     flex: 1;
+    margin-left: 36px;
+    margin-right: -10px;
   }
   .month-label {
     flex: 1;
