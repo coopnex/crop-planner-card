@@ -103,9 +103,18 @@ export class CropPlannerHarvestCard extends LitElement {
 
                   return html`
                     <div class="row">
-                      <div class="crop-label" title="${name}">
-                        ${picture ? html`<img class="crop-thumb" src="${picture}" alt="${name}" />` : nothing} ${name}
-                      </div>
+                      ${picture
+                        ? html`
+                            <div class="crop-label" title="${name}">
+                              <img class="crop-thumb" src="${picture}" alt="${name}" />
+                              <span class="crop-label-text">${name}</span>
+                            </div>
+                          `
+                        : html`
+                            <div class="crop-label-no-img" title="${name}">
+                              <span>${name}</span>
+                            </div>
+                          `}
                       <div class="bar-track">
                         ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
                         ${phases.map(

@@ -20,27 +20,63 @@ export const harvestCardStyles = css`
     align-items: center;
     gap: 4px;
     height: 28px;
+    overflow: visible;
   }
   .crop-label {
+    position: relative;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 28px;
+    flex-shrink: 0;
+    overflow: visible;
+    z-index: 1;
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex: 0 0 auto;
-    width: 120px;
-    font-size: 0.82em;
-    color: var(--primary-text-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-right: 8px;
+    margin-left: -10px;
   }
   .crop-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     object-fit: cover;
+    display: block;
     flex-shrink: 0;
     background: var(--secondary-background-color);
+  }
+  .crop-label-text {
+    position: absolute;
+    left: 6px;
+    top: 48%;
+    line-height: 1;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    color: var(--primary-text-color);
+    text-shadow: 0 0 5px var(--card-background-color, #fff), 0 0 5px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff), 0 0 7px var(--card-background-color, #fff);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .crop-label-no-img {
+    position: relative;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 28px;
+    flex-shrink: 0;
+    overflow: visible;
+    z-index: 1;
+    margin-left: -10px;
+  }
+  .crop-label-no-img span {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    line-height: 1;
+    transform: translateY(-50%);
+    color: var(--primary-text-color);
+    text-shadow: 0 0 5px var(--card-background-color, #fff), 0 0 5px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff), 0 0 7px var(--card-background-color, #fff);
+    white-space: nowrap;
+    z-index: 2;
   }
   /* Month header row */
   .months-header {
@@ -68,6 +104,8 @@ export const harvestCardStyles = css`
     border-radius: 4px;
     background: var(--secondary-background-color);
     overflow: visible;
+    margin-left: 36px;
+    margin-right: -10px;
   }
   /* Subtle month dividers */
   .month-tick {
@@ -88,6 +126,7 @@ export const harvestCardStyles = css`
     justify-content: flex-start;
     padding-left: 2px;
     overflow: visible;
+    line-height: 1;
     transform: translateY(-50%);
   }
   .phase-icon {
