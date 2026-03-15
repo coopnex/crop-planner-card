@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
+import './crop-planner-harvest-card';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
@@ -68,9 +69,10 @@ export class CropPlannerCard extends LitElement {
             title: '',
             cards: [
               { type: 'entities', title: '', entities: cropEntityIds },
-              { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
+              { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true, grid_options: { rows: 8}},
             ],
           },
+          { type: 'custom:crop-planner-harvest-card' },
         ],
       }),
     ];
