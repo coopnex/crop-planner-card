@@ -68,7 +68,7 @@ export class CropPlannerCard extends LitElement {
             title: '',
             cards: [
               { type: 'entities', title: '', entities: cropEntityIds },
-              { type: 'todo-list', entity: TODO_ENTITY_ID },
+              { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
             ],
           },
         ],
