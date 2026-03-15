@@ -1,8 +1,10 @@
 import { LitElement, html, css, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant, CropAttributes, HassEntity } from './types';
 
 const CROP_DOMAIN = 'crop';
+const TODO_ENTITY_ID = 'todo.crop_chores';
+
 const PHASE_ICONS: Record<string, string> = {
   sowing: '🌱',
   germination: '🌿',
@@ -26,18 +28,15 @@ function getCurrentPhase(
   return defaultState;
 }
 
-@customElement('crop-planner-card')
-export class CropPlannerCard extends LitElement {
+// ---------------------------------------------------------------------------
+// Inner card: crop grid only
+// ---------------------------------------------------------------------------
+
+@customElement('crop-planner-crops-card')
+export class CropPlannerCropsCard extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
-  @state() private _config!: CropPlannerCardConfig;
 
-  static getConfigElement() {
-    return document.createElement('crop-planner-card-editor');
-  }
-
-  static getStubConfig(): CropPlannerCardConfig {
-    return { type: 'custom:crop-planner-card', title: 'My Crops' };
-  }
+  private _config!: CropPlannerCardConfig;
 
   setConfig(config: CropPlannerCardConfig) {
     this._config = config;
@@ -149,21 +148,11 @@ export class CropPlannerCard extends LitElement {
       white-space: nowrap;
       text-transform: capitalize;
     }
-    .phase-sowing {
-      background: #6d9e6a;
-    }
-    .phase-germination {
-      background: #5a9e7e;
-    }
-    .phase-flowering {
-      background: #c97ab2;
-    }
-    .phase-harvest {
-      background: #c0804a;
-    }
-    .phase-ok {
-      background: var(--state-ok-color, #4caf50);
-    }
+    .phase-sowing { background: #6d9e6a; }
+    .phase-germination { background: #5a9e7e; }
+    .phase-flowering { background: #c97ab2; }
+    .phase-harvest { background: #c0804a; }
+    .phase-ok { background: var(--state-ok-color, #4caf50); }
   `;
 
   render() {
@@ -181,7 +170,7 @@ export class CropPlannerCard extends LitElement {
         </div>
         ${crops.length === 0
           ? html`<div class="empty">No crops found. Add crops via the integration.</div>`
-          : html` <div class="crop-list">${crops.map((entity) => this._renderCrop(entity, showImages))}</div> `}
+          : html`<div class="crop-list">${crops.map((e) => this._renderCrop(e, showImages))}</div>`}
       </ha-card>
     `;
   }
@@ -192,8 +181,7 @@ export class CropPlannerCard extends LitElement {
     const quantity = attrs.quantity;
     const species = attrs.species;
     const picture = attrs.entity_picture;
-    const phases = attrs.phases;
-    const phase = getCurrentPhase(phases, entity.state);
+    const phase = getCurrentPhase(attrs.phases, entity.state);
     const phaseIcon = PHASE_ICONS[phase] ?? '🌱';
 
     return html`
@@ -216,8 +204,57 @@ export class CropPlannerCard extends LitElement {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Outer card: composes crop grid + todo list via vertical-stack
+// ---------------------------------------------------------------------------
+
+@customElement('crop-planner-card')
+export class CropPlannerCard extends LitElement {
+  @property({ attribute: false }) public hass!: HomeAssistant;
+
+  private _config!: CropPlannerCardConfig;
+  private _stack?: any;
+
+  static getConfigElement() {
+    return document.createElement('crop-planner-card-editor');
+  }
+
+  static getStubConfig(): CropPlannerCardConfig {
+    return { type: 'custom:crop-planner-card', title: 'My Crops' };
+  }
+
+  setConfig(config: CropPlannerCardConfig) {
+    this._config = config;
+  }
+
+  async firstUpdated() {
+    const helpers = await (window as any).loadCardHelpers();
+    this._stack = helpers.createCardElement({
+      type: 'vertical-stack',
+      cards: [
+        { type: 'custom:crop-planner-crops-card', title: this._config.title, show_images: this._config.show_images },
+        { type: 'todo-list', entity: TODO_ENTITY_ID },
+      ],
+    });
+    this._stack.hass = this.hass;
+    this.shadowRoot!.appendChild(this._stack);
+  }
+
+  updated(changedProps: Map<string, unknown>) {
+    if (changedProps.has('hass') && this._stack) {
+      this._stack.hass = this.hass;
+    }
+  }
+
+  // No shadow DOM template needed — the stack is appended directly.
+  render() {
+    return nothing;
+  }
+}
+
 declare global {
   interface HTMLElementTagNameMap {
+    'crop-planner-crops-card': CropPlannerCropsCard;
     'crop-planner-card': CropPlannerCard;
   }
 }
