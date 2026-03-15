@@ -51,8 +51,11 @@ export const harvestCardStyles = css`
     transform: translateY(-50%);
     white-space: nowrap;
     color: var(--primary-text-color);
-    text-shadow: 0 0 5px var(--card-background-color, #fff), 0 0 5px var(--card-background-color, #fff),
-      0 0 7px var(--card-background-color, #fff), 0 0 7px var(--card-background-color, #fff);
+    text-shadow:
+      0 0 5px var(--card-background-color, #fff),
+      0 0 5px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff);
     pointer-events: none;
     z-index: 2;
   }
@@ -73,8 +76,11 @@ export const harvestCardStyles = css`
     line-height: 1;
     transform: translateY(-50%);
     color: var(--primary-text-color);
-    text-shadow: 0 0 5px var(--card-background-color, #fff), 0 0 5px var(--card-background-color, #fff),
-      0 0 7px var(--card-background-color, #fff), 0 0 7px var(--card-background-color, #fff);
+    text-shadow:
+      0 0 5px var(--card-background-color, #fff),
+      0 0 5px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff),
+      0 0 7px var(--card-background-color, #fff);
     white-space: nowrap;
     z-index: 2;
   }
