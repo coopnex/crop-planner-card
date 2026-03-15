@@ -78,7 +78,7 @@ export class CropPlannerCard extends LitElement {
           },
           { type: 'custom:crop-planner-harvest-card' },
           { type: 'entities', title: '', entities: cropEntityIds },
-          { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true }
+          { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
         ],
       }),
     ];
@@ -148,6 +148,9 @@ export class CropPlannerCardEditor extends LitElement {
 }
 
 declare global {
+  interface Window {
+    customCards: Array<Record<string, unknown>>;
+  }
   interface HTMLElementTagNameMap {
     'crop-planner-card': CropPlannerCard;
     'crop-planner-card-editor': CropPlannerCardEditor;

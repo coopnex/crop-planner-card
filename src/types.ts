@@ -11,6 +11,12 @@ export interface HassEntity {
   last_updated: string;
 }
 
+export interface CropAttributes {
+  friendly_name?: string;
+  entity_picture?: string;
+  phases?: Record<string, { start?: string; end?: string }>;
+}
+
 export interface HomeAssistant {
   states: Record<string, HassEntity>;
   language: string;
