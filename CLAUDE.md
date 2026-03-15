@@ -14,12 +14,23 @@ yarn rollup         # Production bundle only (no clean/lint)
 
 There are no tests currently in this project.
 
+## Sibling project
+
+The Home Assistant integration that this card consumes lives at `../crop-planner-integration/custom_components/crop/`. Key files to cross-reference:
+
+- `const.py` — `ChoreCategory` enum and phase/category constants
+- `data.py` — `CropData` / `CropPhase` dataclasses (source of truth for entity attributes)
+- `todo.py` — `CropTodoList` entity; todo entity ID is `todo.crop_chores`
+- `crop.py` — `Crop` entity; state derives from nearest due chore or current lifecycle phase
+
 ## Architecture
 
 This is a **Home Assistant Lovelace custom card** implemented as a Lit Web Component (`<crop-planner-card>`), distributed as a single-file ES module bundle.
 
 **Source**: `src/crop-planner-card.ts` + `src/types.ts`
 **Output**: `dist/crop-planner-card.js` (registered in HACS as `crop-planner-card.js`)
+
+The card renders two sections inside a single `ha-card`: the crop grid on top and a todo/chore list below, separated by a divider.
 
 ### How it works
 
