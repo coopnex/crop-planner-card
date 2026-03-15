@@ -4,6 +4,7 @@ import type { CropPlannerCardConfig, HomeAssistant } from './types';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
+const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
 
 @customElement('crop-planner-card')
 export class CropPlannerCard extends LitElement {
@@ -35,28 +36,44 @@ export class CropPlannerCard extends LitElement {
     const cropEntityIds = Object.keys(this.hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
-
-    this._cards = [helpers.createCardElement({
+    this._cards = [
+      helpers.createCardElement({
         type: 'vertical-stack',
         title: '',
         cards: [
-                {
-                  type: 'heading',
-                  heading: this._config.title ?? 'Crop Planner',
-                  icon: 'mdi:sprout',
-                  heading_style: 'title',
+          {
+            type: 'heading',
+            heading: this._config.title ?? 'Crop Planner',
+            icon: 'mdi:sprout',
+            heading_style: 'title',
+            badges: [
+              {
+                type: 'entity',
+                show_state: true,
+                show_icon: true,
+                entity: AI_BUTTON_ENTITY_ID,
+                icon: 'mdi:assistant',
+                state_content: 'name',
+                name: { type: 'entity' },
+                tap_action: {
+                  action: 'perform-action',
+                  perform_action: 'button.press',
+                  target: { entity_id: AI_BUTTON_ENTITY_ID },
                 },
-                {
-                      type: 'horizontal-stack',
-                      title: '',
-                      cards: [
-                        { type: 'entities', title: '', entities: cropEntityIds },
-                        { type: 'todo-list', entity: TODO_ENTITY_ID },
-                      ],
-                    },
-              ]
-          })
-      ];
+              },
+            ],
+          },
+          {
+            type: 'horizontal-stack',
+            title: '',
+            cards: [
+              { type: 'entities', title: '', entities: cropEntityIds },
+              { type: 'todo-list', entity: TODO_ENTITY_ID },
+            ],
+          },
+        ],
+      }),
+    ];
     this._cards[0].hass = this.hass;
 
     const container = document.createElement('div');
@@ -91,7 +108,9 @@ export class CropPlannerCardEditor extends LitElement {
   private _valueChanged(e: Event) {
     const target = e.target as HTMLInputElement;
     const newConfig = { ...this._config, [target.name]: target.value };
-    this.dispatchEvent(new CustomEvent('config-changed', { detail: { config: newConfig }, bubbles: true, composed: true }));
+    this.dispatchEvent(
+      new CustomEvent('config-changed', { detail: { config: newConfig }, bubbles: true, composed: true }),
+    );
   }
 
   render() {
@@ -102,7 +121,13 @@ export class CropPlannerCardEditor extends LitElement {
         .data=${this._config}
         .computeLabel=${(s: { name: string }) => (s.name === 'title' ? 'Title' : s.name)}
         @value-changed=${(e: CustomEvent) =>
-          this.dispatchEvent(new CustomEvent('config-changed', { detail: { config: { ...this._config, ...e.detail.value } }, bubbles: true, composed: true }))}
+          this.dispatchEvent(
+            new CustomEvent('config-changed', {
+              detail: { config: { ...this._config, ...e.detail.value } },
+              bubbles: true,
+              composed: true,
+            }),
+          )}
       ></ha-form>
     `;
   }
