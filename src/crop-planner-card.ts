@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
@@ -14,19 +14,16 @@ export class CropPlannerCard extends LitElement {
   private _config!: CropPlannerCardConfig;
   private _cards: any[] = [];
 
-  static styles = css`
-    .container {
-      max-height: calc(100vh - var(--header-height, 56px) - 48px);
-      overflow-y: auto;
-    }
-  `;
-
   static getConfigElement() {
     return document.createElement('crop-planner-card-editor');
   }
 
-  static getStubConfig(): CropPlannerCardConfig {
-    return { type: 'custom:crop-planner-card', title: 'My Crops' };
+  getGridOptions() {
+    return { columns: 'full', rows: 4, max_rows: 2 };
+  }
+
+  getStubConfig(): CropPlannerCardConfig {
+    return { type: 'custom:crop-planner-card', title: 'Crop Planner' };
   }
 
   setConfig(config: CropPlannerCardConfig) {
@@ -64,24 +61,21 @@ export class CropPlannerCard extends LitElement {
               },
             ],
           },
+          { type: 'custom:crop-planner-harvest-card' },
           {
             type: 'horizontal-stack',
             title: '',
             cards: [
               { type: 'entities', title: '', entities: cropEntityIds },
-              { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true, grid_options: { rows: 8 } },
+              { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
             ],
           },
-          { type: 'custom:crop-planner-harvest-card' },
         ],
       }),
     ];
     this._cards[0].hass = this.hass;
 
-    const container = document.createElement('div');
-    container.classList.add('container');
-    container.appendChild(this._cards[0]);
-    this.shadowRoot!.appendChild(container);
+    this.shadowRoot!.appendChild(this._cards[0]);
   }
 
   updated(changedProps: Map<string, unknown>) {
@@ -94,6 +88,16 @@ export class CropPlannerCard extends LitElement {
     return nothing;
   }
 }
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "crop-planner-card",
+  name: "Crop Planner",
+  preview: false, // Optional - defaults to false
+  description: "A custom card made by me!", // Optional
+  documentationURL:
+    "https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card", // Adds a help link in the frontend card editor
+});
 
 // ---------------------------------------------------------------------------
 // Visual editor
