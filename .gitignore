@@ -1,5 +1,6 @@
 node_modules/
 .idea/
 .claude/
+dist/
 *.tsbuildinfo
 package-lock.json
