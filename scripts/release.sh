@@ -40,7 +40,9 @@ fi
 
 # ── 5. Bump version in package.json ──────────────────────────────────────────
 CURRENT_VERSION=$(node -p "require('./package.json').version")
-IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+# Strip any pre-release suffix (e.g. 0.2.0-beta-1 → 0.2.0)
+BASE_VERSION="${CURRENT_VERSION%%-*}"
+IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
 
 case "$BUMP_TYPE" in
   major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
