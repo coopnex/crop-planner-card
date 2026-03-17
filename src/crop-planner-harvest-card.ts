@@ -1,5 +1,6 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import type { HomeAssistant, CropAttributes } from './types';
 import { harvestCardStyles } from './crop-planner-harvest-card.styles';
 
@@ -124,21 +125,24 @@ export class CropPlannerHarvestCard extends LitElement {
                               <span>${name}</span>
                             </div>
                           `}
-                      <div class="bar-track">
-                        ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
-                        ${phases.map(
-                          (phase) => html`
-                            <div
-                              class="phase-segment"
-                              title="${phase.name}"
-                              style="left:${phase.startPct}%;width:${phase.endPct -
-                              phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
-                            >
-                              <span class="phase-icon">${PHASE_ICONS[phase.name] ?? ''}</span>
-                            </div>
-                          `,
-                        )}
-                      </div>
+                      ${keyed(
+                        entity.last_updated,
+                        html`<div class="bar-track">
+                          ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
+                          ${phases.map(
+                            (phase) => html`
+                              <div
+                                class="phase-segment"
+                                title="${phase.name}"
+                                style="left:${phase.startPct}%;width:${phase.endPct -
+                                phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
+                              >
+                                <span class="phase-icon">${PHASE_ICONS[phase.name] ?? ''}</span>
+                              </div>
+                            `,
+                          )}
+                        </div>`,
+                      )}
                     </div>
                   `;
                 })}

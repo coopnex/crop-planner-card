@@ -1,9 +1,6 @@
 import { css } from 'lit';
 
 export const harvestCardStyles = css`
-  :host {
-    display: block;
-  }
   ha-card {
     padding: 16px;
   }
@@ -108,6 +105,14 @@ export const harvestCardStyles = css`
     font-weight: 700;
   }
   /* Phase bar */
+  @keyframes expand-bar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
   .bar-track {
     position: relative;
     flex: 1;
@@ -117,6 +122,8 @@ export const harvestCardStyles = css`
     overflow: visible;
     margin-left: 36px;
     margin-right: -10px;
+    transform-origin: left center;
+    animation: expand-bar 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   /* Subtle month dividers */
   .month-tick {

@@ -45,7 +45,7 @@ export class CropPlannerCard extends LitElement {
     const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
     if (aiState !== this._lastAiState) {
       this._lastAiState = aiState;
-      if (this._harvestCard) this._harvestCard.hass = hass;
+      if (aiState === 'idle' && this._harvestCard) this._harvestCard.hass = hass;
     }
   }
 
@@ -73,8 +73,6 @@ export class CropPlannerCard extends LitElement {
     const cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
-    this._harvestCard = helpers.createCardElement({ type: 'custom:crop-planner-harvest-card' });
-
     this._cards = [
       helpers.createCardElement({
         type: 'vertical-stack',
@@ -94,6 +92,7 @@ export class CropPlannerCard extends LitElement {
               visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
             })),
           },
+          { type: 'custom:crop-planner-harvest-card' },
           {
             type: 'horizontal-stack',
             cards: [
@@ -125,11 +124,13 @@ export class CropPlannerCard extends LitElement {
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
-    // Apply current hass and mount
-    this._harvestCard.hass = this._hass;
+    // Mount and then query the harvest card from inside the vertical-stack's shadow DOM
     this._cards[0].hass = this._hass;
-    this.shadowRoot!.appendChild(this._harvestCard);
     this.shadowRoot!.appendChild(this._cards[0]);
+
+    // Wait for the vertical-stack to render its children before grabbing the reference
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    this._harvestCard = this._cards[0].shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
   }
 
   render() {
