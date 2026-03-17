@@ -31,12 +31,12 @@ echo ""
 echo "Current version: $CURRENT_VERSION"
 echo "Select version bump type:"
 if $IS_MAIN; then
-  select BUMP_TYPE in major minor patch; do
+  select BUMP_TYPE in major minor patch snapshot; do
     [[ -n "$BUMP_TYPE" ]] && break
     echo "Invalid selection."
   done
 else
-  select BUMP_TYPE in major minor patch "pre-release suffix only"; do
+  select BUMP_TYPE in major minor patch snapshot; do
     [[ -n "$BUMP_TYPE" ]] && break
     echo "Invalid selection."
   done
@@ -47,15 +47,22 @@ case "$BUMP_TYPE" in
   major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
   minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
   patch) PATCH=$((PATCH + 1)) ;;
-  "pre-release suffix only") ;; # keep MAJOR.MINOR.PATCH as-is
+  snapshot) ;; # keep MAJOR.MINOR.PATCH as-is
 esac
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-if ! $IS_MAIN; then
-  echo ""
+echo ""
+if $IS_MAIN; then
   read -rp "Enter pre-release suffix (e.g. RC1, beta-1) or leave empty for a stable release: " PRE_SUFFIX
   [[ -n "$PRE_SUFFIX" ]] && NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
+else
+  while true; do
+    read -rp "Enter pre-release suffix (e.g. RC1, beta-1): " PRE_SUFFIX
+    [[ -n "$PRE_SUFFIX" ]] && break
+    echo "Pre-release suffix is required on non-main branches."
+  done
+  NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
 fi
 
 echo ""
