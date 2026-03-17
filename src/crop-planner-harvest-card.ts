@@ -30,6 +30,8 @@ interface ResolvedPhase {
   name: string;
   startPct: number;
   endPct: number;
+  // When a phase wraps past year-end it is split in two; iconPct marks where to place the icon
+  iconPct?: number;
 }
 
 function dateToYearPct(dateStr: string): number {
@@ -46,7 +48,9 @@ function resolvePhases(phases: Record<string, { start?: string; end?: string }> 
     .map(([name, r]) => ({ name, start: r.start!, end: r.end }))
     .sort((a, b) => a.start.localeCompare(b.start));
 
-  return sorted.map((p, i) => {
+  const result: ResolvedPhase[] = [];
+
+  sorted.forEach((p, i) => {
     const startPct = dateToYearPct(p.start);
     let endPct: number;
     if (p.end) {
@@ -55,8 +59,18 @@ function resolvePhases(phases: Record<string, { start?: string; end?: string }> 
       const next = sorted[i + 1];
       endPct = next ? dateToYearPct(next.start) : startPct + 100 / 12;
     }
-    return { name: p.name, startPct, endPct };
+
+    if (endPct < startPct) {
+      // Phase wraps around year boundary — split into tail + head segments
+      const midPct = (startPct + 100) / 2; // icon on the tail segment
+      result.push({ name: p.name, startPct, endPct: 100, iconPct: midPct });
+      result.push({ name: p.name, startPct: 0, endPct, iconPct: null as unknown as number });
+    } else {
+      result.push({ name: p.name, startPct, endPct });
+    }
   });
+
+  return result;
 }
 
 @customElement('crop-planner-harvest-card')
@@ -149,13 +163,16 @@ export class CropPlannerHarvestCard extends LitElement {
                               ></div>
                             `,
                           )}
-                          ${phases.map(
-                            (phase) => html`
-                              <span class="phase-icon" title="${phase.name}" style="left:${phase.startPct}%"
-                                >${PHASE_ICONS[phase.name] ?? ''}</span
-                              >
-                            `,
-                          )}
+                          ${phases
+                            .filter((phase) => phase.iconPct !== null)
+                            .map((phase) => {
+                              const pct = phase.iconPct ?? phase.startPct;
+                              return html`
+                                <span class="phase-icon" title="${phase.name}" style="left:${pct}%"
+                                  >${PHASE_ICONS[phase.name] ?? ''}</span
+                                >
+                              `;
+                            })}
                         </div>`,
                       )}
                     </div>
