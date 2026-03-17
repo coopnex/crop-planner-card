@@ -1,4 +1,4 @@
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
@@ -58,7 +58,7 @@ export class CropPlannerCard extends LitElement {
   }
 
   getGridOptions() {
-    return { columns: 'full', rows: 4, max_rows: 2 };
+    return { columns: 'full', min_rows: 6};
   }
 
   getStubConfig(): CropPlannerCardConfig {
@@ -124,9 +124,9 @@ export class CropPlannerCard extends LitElement {
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
-    // Mount and then query the harvest card from inside the vertical-stack's shadow DOM
+    const root = this.shadowRoot!.getElementById('root')!;
     this._cards[0].hass = this._hass;
-    this.shadowRoot!.appendChild(this._cards[0]);
+    root.appendChild(this._cards[0]);
 
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -134,7 +134,7 @@ export class CropPlannerCard extends LitElement {
   }
 
   render() {
-    return nothing;
+    return html`<div id="root"></div>`;
   }
 }
 

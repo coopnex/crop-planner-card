@@ -80,6 +80,18 @@ export class CropPlannerHarvestCard extends LitElement {
     this._config = config;
   }
 
+  getCardSize(): number {
+    const cropCount = this._hass
+      ? Object.keys(this._hass.states).filter((id) => id.startsWith('crop.')).length
+      : 0;
+    // 32px card padding + 28px header row + cropCount * 30px (28px row + 2px gap)
+    return Math.ceil((32 + 28 + cropCount * 30) / 50);
+  }
+  getGridOptions() {
+    const rows = this.getCardSize();
+    return { columns: 'full', rows, min_rows: 4 };
+  }
+
   static styles = harvestCardStyles;
 
   render() {
