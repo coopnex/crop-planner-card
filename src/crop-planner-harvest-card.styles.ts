@@ -146,6 +146,7 @@ export const harvestCardStyles = css`
     overflow: visible;
     line-height: 1;
     transform: translateY(-50%);
+    opacity: 0.5;
   }
   .phase-icon {
     position: absolute;
