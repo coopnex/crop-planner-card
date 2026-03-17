@@ -15,7 +15,7 @@ const YEAR_MS = YEAR_END - YEAR_START;
 const PHASE_COLORS: Record<string, string> = {
   sowing: '#6d9e6a',
   germination: '#5a9e7e',
-  flowering: '#c97ab2',
+  flowering: '#c95a8a',
   harvest: '#c0804a',
 };
 
@@ -146,9 +146,14 @@ export class CropPlannerHarvestCard extends LitElement {
                                 title="${phase.name}"
                                 style="left:${phase.startPct}%;width:${phase.endPct -
                                 phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
+                              ></div>
+                            `,
+                          )}
+                          ${phases.map(
+                            (phase) => html`
+                              <span class="phase-icon" title="${phase.name}" style="left:${phase.startPct}%"
+                                >${PHASE_ICONS[phase.name] ?? ''}</span
                               >
-                                <span class="phase-icon">${PHASE_ICONS[phase.name] ?? ''}</span>
-                              </div>
                             `,
                           )}
                         </div>`,
