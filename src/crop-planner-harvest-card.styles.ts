@@ -155,11 +155,11 @@ export const harvestCardStyles = css`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(245, 240, 232, 0.3);
-    font-size: 0.85em;
+    font-size: 1.05em;
     box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.08);
     z-index: 1;
   }
