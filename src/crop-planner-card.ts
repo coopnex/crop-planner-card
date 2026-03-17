@@ -32,12 +32,20 @@ export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
   private _cards: any[] = [];
+  private _harvestCard: any = null;
   private _cardsReady = false;
+  private _lastAiState: string | undefined;
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._cardsReady) {
-      this._cards.forEach((card) => (card.hass = hass));
+    if (!this._cardsReady) return;
+
+    this._cards.forEach((card) => (card.hass = hass));
+
+    const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
+    if (aiState !== this._lastAiState) {
+      this._lastAiState = aiState;
+      if (this._harvestCard) this._harvestCard.hass = hass;
     }
   }
 
@@ -65,6 +73,8 @@ export class CropPlannerCard extends LitElement {
     const cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
+    this._harvestCard = helpers.createCardElement({ type: 'custom:crop-planner-harvest-card' });
+
     this._cards = [
       helpers.createCardElement({
         type: 'vertical-stack',
@@ -84,7 +94,6 @@ export class CropPlannerCard extends LitElement {
               visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
             })),
           },
-          { type: 'custom:crop-planner-harvest-card' },
           {
             type: 'horizontal-stack',
             cards: [
@@ -114,9 +123,12 @@ export class CropPlannerCard extends LitElement {
       }),
     ];
     this._cardsReady = true;
+    this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
-    // Apply current hass (may have been updated during async init) and mount
+    // Apply current hass and mount
+    this._harvestCard.hass = this._hass;
     this._cards[0].hass = this._hass;
+    this.shadowRoot!.appendChild(this._harvestCard);
     this.shadowRoot!.appendChild(this._cards[0]);
   }
 

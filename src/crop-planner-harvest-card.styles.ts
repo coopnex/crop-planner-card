@@ -1,6 +1,9 @@
 import { css } from 'lit';
 
 export const harvestCardStyles = css`
+  :host {
+    display: block;
+  }
   ha-card {
     padding: 16px;
   }

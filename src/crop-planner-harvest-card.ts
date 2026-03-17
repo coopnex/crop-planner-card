@@ -1,5 +1,5 @@
 import { LitElement, html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import type { HomeAssistant, CropAttributes } from './types';
 import { harvestCardStyles } from './crop-planner-harvest-card.styles';
 
@@ -60,7 +60,16 @@ function resolvePhases(phases: Record<string, { start?: string; end?: string }> 
 
 @customElement('crop-planner-harvest-card')
 export class CropPlannerHarvestCard extends LitElement {
-  @property({ attribute: false }) public hass!: HomeAssistant;
+  private _hass!: HomeAssistant;
+
+  set hass(hass: HomeAssistant) {
+    this._hass = hass;
+    this.requestUpdate();
+  }
+
+  get hass(): HomeAssistant {
+    return this._hass;
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _config: any;
