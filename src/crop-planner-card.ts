@@ -29,10 +29,21 @@ const AI_STATE_BADGES = [
 
 @customElement('crop-planner-card')
 export class CropPlannerCard extends LitElement {
-  @property({ attribute: false }) public hass!: HomeAssistant;
-
+  private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
   private _cards: any[] = [];
+  private _cardsReady = false;
+
+  set hass(hass: HomeAssistant) {
+    this._hass = hass;
+    if (this._cardsReady) {
+      this._cards.forEach((card) => (card.hass = hass));
+    }
+  }
+
+  get hass(): HomeAssistant {
+    return this._hass;
+  }
 
   static getConfigElement() {
     return document.createElement('crop-planner-card-editor');
@@ -51,13 +62,12 @@ export class CropPlannerCard extends LitElement {
   }
 
   async firstUpdated() {
-    const cropEntityIds = Object.keys(this.hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
+    const cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
     this._cards = [
       helpers.createCardElement({
         type: 'vertical-stack',
-        title: '',
         cards: [
           {
             type: 'heading',
@@ -74,37 +84,40 @@ export class CropPlannerCard extends LitElement {
               visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
             })),
           },
+          { type: 'custom:crop-planner-harvest-card' },
           {
-            type: 'entities',
-            title: 'AI Tools',
-            entities: [
+            type: 'horizontal-stack',
+            cards: [
               {
+                type: 'tile',
                 entity: AI_BUTTON_ENTITY_ID,
                 name: 'Generate Chores',
                 icon: 'mdi:assistant',
+                hide_state: true,
+                tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
+                card_mod: { style: 'ha-tile-badge { display: none; }' },
               },
               {
+                type: 'tile',
                 entity: ENRICH_BUTTON_ENTITY_ID,
                 name: 'Enrich Crop Data',
                 icon: 'mdi:database-refresh',
+                hide_state: true,
+                tap_action: { action: 'perform-action', perform_action: 'button.press', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+                card_mod: { style: 'ha-tile-badge { display: none; }' },
               },
             ],
           },
-          { type: 'custom:crop-planner-harvest-card' },
           { type: 'entities', title: '', entities: cropEntityIds },
           { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
         ],
       }),
     ];
-    this._cards[0].hass = this.hass;
+    this._cardsReady = true;
 
+    // Apply current hass (may have been updated during async init) and mount
+    this._cards[0].hass = this._hass;
     this.shadowRoot!.appendChild(this._cards[0]);
-  }
-
-  updated(changedProps: Map<string, unknown>) {
-    if (changedProps.has('hass')) {
-      this._cards.forEach((c) => (c.hass = this.hass));
-    }
   }
 
   render() {
