@@ -7,6 +7,25 @@ const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
 const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
 const ENRICH_BUTTON_ENTITY_ID = 'button.enrich_crops_data';
+const AI_STATE_ENTITY_ID = 'sensor.crop_ai_state';
+
+const AI_STATE_BADGES = [
+  {
+    state: 'idle',
+    icon: 'mdi:robot-outline',
+    color: 'grey',
+  },
+  {
+    state: 'proposing_tasks',
+    icon: 'mdi:head-cog',
+    color: 'amber',
+  },
+  {
+    state: 'filling_fields',
+    icon: 'mdi:pencil-circle',
+    color: 'blue',
+  },
+];
 
 @customElement('crop-planner-card')
 export class CropPlannerCard extends LitElement {
@@ -45,34 +64,29 @@ export class CropPlannerCard extends LitElement {
             heading: this._config.title ?? 'Crop Planner',
             icon: 'mdi:sprout',
             heading_style: 'title',
-            badges: [
+            badges: AI_STATE_BADGES.map(({ state, icon, color }) => ({
+              type: 'entity',
+              entity: AI_STATE_ENTITY_ID,
+              show_state: true,
+              show_icon: true,
+              icon,
+              color,
+              visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
+            })),
+          },
+          {
+            type: 'entities',
+            title: 'AI Tools',
+            entities: [
               {
-                type: 'entity',
-                show_state: true,
-                show_icon: true,
                 entity: AI_BUTTON_ENTITY_ID,
+                name: 'Generate Chores',
                 icon: 'mdi:assistant',
-                state_content: 'name',
-                name: { type: 'entity' },
-                tap_action: {
-                  action: 'perform-action',
-                  perform_action: 'button.press',
-                  target: { entity_id: AI_BUTTON_ENTITY_ID },
-                },
               },
               {
-                type: 'entity',
-                show_state: true,
-                show_icon: true,
                 entity: ENRICH_BUTTON_ENTITY_ID,
+                name: 'Enrich Crop Data',
                 icon: 'mdi:database-refresh',
-                state_content: 'name',
-                name: { type: 'entity' },
-                tap_action: {
-                  action: 'perform-action',
-                  perform_action: 'button.press',
-                  target: { entity_id: ENRICH_BUTTON_ENTITY_ID },
-                },
               },
             ],
           },
