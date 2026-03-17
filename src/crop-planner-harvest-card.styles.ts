@@ -118,7 +118,7 @@ export const harvestCardStyles = css`
     flex: 1;
     height: 12px;
     border-radius: 4px;
-    background: var(--secondary-background-color);
+    background: var(--divider-color, rgba(128, 128, 128, 0.2));
     overflow: visible;
     margin-left: 36px;
     margin-right: -10px;
