@@ -118,7 +118,7 @@ export const harvestCardStyles = css`
     flex: 1;
     height: 12px;
     border-radius: 4px;
-    background: var(--secondary-background-color);
+    background: var(--divider-color, rgba(128, 128, 128, 0.2));
     overflow: visible;
     margin-left: 36px;
     margin-right: -10px;
@@ -146,18 +146,22 @@ export const harvestCardStyles = css`
     overflow: visible;
     line-height: 1;
     transform: translateY(-50%);
+    opacity: 0.5;
   }
   .phase-icon {
+    position: absolute;
+    top: 50%;
+    transform: translate(-25%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #f5f0e8;
+    background: rgba(245, 240, 232, 0.3);
     font-size: 0.85em;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.08);
+    z-index: 1;
   }
   .empty {
     text-align: center;
