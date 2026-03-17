@@ -81,9 +81,7 @@ export class CropPlannerHarvestCard extends LitElement {
   }
 
   getCardSize(): number {
-    const cropCount = this._hass
-      ? Object.keys(this._hass.states).filter((id) => id.startsWith('crop.')).length
-      : 0;
+    const cropCount = this._hass ? Object.keys(this._hass.states).filter((id) => id.startsWith('crop.')).length : 0;
     // 32px card padding + 28px header row + cropCount * 30px (28px row + 2px gap)
     return Math.ceil((32 + 28 + cropCount * 30) / 50);
   }

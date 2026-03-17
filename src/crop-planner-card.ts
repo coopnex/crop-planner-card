@@ -1,5 +1,5 @@
-import { LitElement, html, css, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { LitElement, html, nothing } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
 
@@ -58,7 +58,7 @@ export class CropPlannerCard extends LitElement {
   }
 
   getGridOptions() {
-    return { columns: 'full', min_rows: 6};
+    return { columns: 'full', min_rows: 6 };
   }
 
   getStubConfig(): CropPlannerCardConfig {
@@ -98,21 +98,21 @@ export class CropPlannerCard extends LitElement {
             title: '',
             entities: [
               {
-                  type: 'buttons',
-                  entities: [
-                      {
-                          entity: AI_BUTTON_ENTITY_ID,
-                          icon: 'mdi:assistant',
-                          show_name: true,
-                          tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
-                      },
-                      {
-                          entity: ENRICH_BUTTON_ENTITY_ID,
-                          icon: 'mdi:database-refresh',
-                          show_name: true,
-                          tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
-                      },
-                  ]
+                type: 'buttons',
+                entities: [
+                  {
+                    entity: AI_BUTTON_ENTITY_ID,
+                    icon: 'mdi:assistant',
+                    show_name: true,
+                    tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
+                  },
+                  {
+                    entity: ENRICH_BUTTON_ENTITY_ID,
+                    icon: 'mdi:database-refresh',
+                    show_name: true,
+                    tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+                  },
+                ],
               },
             ],
           },
