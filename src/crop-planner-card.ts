@@ -94,25 +94,25 @@ export class CropPlannerCard extends LitElement {
           },
           { type: 'custom:crop-planner-harvest-card' },
           {
-            type: 'horizontal-stack',
-            cards: [
+            type: 'entities',
+            title: '',
+            entities: [
               {
-                type: 'tile',
-                entity: AI_BUTTON_ENTITY_ID,
-                name: 'Generate Chores',
-                icon: 'mdi:assistant',
-                hide_state: true,
-                tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
-                card_mod: { style: 'ha-tile-badge { display: none; }' },
-              },
-              {
-                type: 'tile',
-                entity: ENRICH_BUTTON_ENTITY_ID,
-                name: 'Enrich Crop Data',
-                icon: 'mdi:database-refresh',
-                hide_state: true,
-                tap_action: { action: 'perform-action', perform_action: 'button.press', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
-                card_mod: { style: 'ha-tile-badge { display: none; }' },
+                  type: 'buttons',
+                  entities: [
+                      {
+                          entity: AI_BUTTON_ENTITY_ID,
+                          icon: 'mdi:assistant',
+                          show_name: true,
+                          tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
+                      },
+                      {
+                          entity: ENRICH_BUTTON_ENTITY_ID,
+                          icon: 'mdi:database-refresh',
+                          show_name: true,
+                          tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+                      },
+                  ]
               },
             ],
           },
