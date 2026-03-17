@@ -13,11 +13,11 @@ const YEAR_END = new Date(REF_YEAR + 1, 0, 1).getTime();
 const YEAR_MS = YEAR_END - YEAR_START;
 
 const PHASE_COLORS: Record<string, string> = {
-  sowing: '#6d9e6a',
-  germination: '#5a9e7e',
-  flowering: '#c95a8a',
-  harvest: '#c0804a',
-  gap: '#3a6b38',
+  sowing: '#a8d4a5',
+  germination: '#5db38a',
+  flowering: '#d4607a',
+  harvest: '#d4a06a',
+  gap: '#7bc275',
 };
 
 const PHASE_ICONS: Record<string, string> = {
