@@ -1,7 +1,7 @@
 {
   "name": "crop-planner-card",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.2.1-RC1",
   "packageManager": "yarn@1.22.22",
   "description": "A Lovelace card for the Crop Planner Home Assistant integration",
   "main": "dist/crop-planner-card.js",
@@ -11,7 +11,8 @@
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts",
     "rollup": "rollup -c",
-    "dev": "rollup -c --watch"
+    "dev": "rollup -c --watch",
+    "release": "bash scripts/release.sh"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.0",
