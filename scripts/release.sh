@@ -22,48 +22,56 @@ echo "Running build..."
 yarn build
 
 # ── 4. Version bump type ─────────────────────────────────────────────────────
-if $IS_MAIN; then
-  echo ""
-  echo "Select version bump type:"
-  select BUMP_TYPE in major minor patch; do
-    [[ -n "$BUMP_TYPE" ]] && break
-    echo "Invalid selection. Please choose 1, 2, or 3."
-  done
-else
-  echo ""
-  echo "Select pre-release version bump type:"
-  select BUMP_TYPE in major minor patch; do
-    [[ -n "$BUMP_TYPE" ]] && break
-    echo "Invalid selection. Please choose 1, 2, or 3."
-  done
-fi
-
-# ── 5. Bump version in package.json ──────────────────────────────────────────
 CURRENT_VERSION=$(node -p "require('./package.json').version")
 # Strip any pre-release suffix (e.g. 0.2.0-beta-1 → 0.2.0)
 BASE_VERSION="${CURRENT_VERSION%%-*}"
 IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
 
+echo ""
+echo "Current version: $CURRENT_VERSION"
+echo "Select version bump type:"
+if $IS_MAIN; then
+  select BUMP_TYPE in major minor patch snapshot; do
+    [[ -n "$BUMP_TYPE" ]] && break
+    echo "Invalid selection."
+  done
+else
+  select BUMP_TYPE in major minor patch snapshot; do
+    [[ -n "$BUMP_TYPE" ]] && break
+    echo "Invalid selection."
+  done
+fi
+
+# ── 5. Calculate new version ──────────────────────────────────────────────────
 case "$BUMP_TYPE" in
   major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
   minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
   patch) PATCH=$((PATCH + 1)) ;;
+  snapshot) ;; # keep MAJOR.MINOR.PATCH as-is
 esac
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-if ! $IS_MAIN; then
-  echo ""
-  read -rp "Enter pre-release suffix (e.g. RC1, beta-1): " PRE_SUFFIX
-  if [[ -z "$PRE_SUFFIX" ]]; then
-    echo "Error: Pre-release suffix cannot be empty." >&2
-    exit 1
-  fi
+echo ""
+if $IS_MAIN; then
+  read -rp "Enter pre-release suffix (e.g. RC1, beta-1) or leave empty for a stable release: " PRE_SUFFIX
+  [[ -n "$PRE_SUFFIX" ]] && NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
+else
+  while true; do
+    read -rp "Enter pre-release suffix (e.g. RC1, beta-1): " PRE_SUFFIX
+    [[ -n "$PRE_SUFFIX" ]] && break
+    echo "Pre-release suffix is required on non-main branches."
+  done
   NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
 fi
 
 echo ""
-echo "Bumping version: $CURRENT_VERSION → $NEW_VERSION"
+echo "Version bump: $CURRENT_VERSION → $NEW_VERSION"
+read -rp "Proceed with this release? [y/N] " CONFIRM
+if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+  echo "Aborted."
+  exit 0
+fi
 
 # Use node to update package.json to preserve formatting
 node -e "

@@ -1,5 +1,6 @@
 import { LitElement, html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import type { HomeAssistant, CropAttributes } from './types';
 import { harvestCardStyles } from './crop-planner-harvest-card.styles';
 
@@ -60,7 +61,16 @@ function resolvePhases(phases: Record<string, { start?: string; end?: string }> 
 
 @customElement('crop-planner-harvest-card')
 export class CropPlannerHarvestCard extends LitElement {
-  @property({ attribute: false }) public hass!: HomeAssistant;
+  private _hass!: HomeAssistant;
+
+  set hass(hass: HomeAssistant) {
+    this._hass = hass;
+    this.requestUpdate();
+  }
+
+  get hass(): HomeAssistant {
+    return this._hass;
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _config: any;
@@ -68,6 +78,18 @@ export class CropPlannerHarvestCard extends LitElement {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setConfig(config: any) {
     this._config = config;
+  }
+
+  getCardSize(): number {
+    const cropCount = this._hass
+      ? Object.keys(this._hass.states).filter((id) => id.startsWith('crop.')).length
+      : 0;
+    // 32px card padding + 28px header row + cropCount * 30px (28px row + 2px gap)
+    return Math.ceil((32 + 28 + cropCount * 30) / 50);
+  }
+  getGridOptions() {
+    const rows = this.getCardSize();
+    return { columns: 'full', rows, min_rows: 4 };
   }
 
   static styles = harvestCardStyles;
@@ -115,21 +137,24 @@ export class CropPlannerHarvestCard extends LitElement {
                               <span>${name}</span>
                             </div>
                           `}
-                      <div class="bar-track">
-                        ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
-                        ${phases.map(
-                          (phase) => html`
-                            <div
-                              class="phase-segment"
-                              title="${phase.name}"
-                              style="left:${phase.startPct}%;width:${phase.endPct -
-                              phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
-                            >
-                              <span class="phase-icon">${PHASE_ICONS[phase.name] ?? ''}</span>
-                            </div>
-                          `,
-                        )}
-                      </div>
+                      ${keyed(
+                        entity.last_updated,
+                        html`<div class="bar-track">
+                          ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
+                          ${phases.map(
+                            (phase) => html`
+                              <div
+                                class="phase-segment"
+                                title="${phase.name}"
+                                style="left:${phase.startPct}%;width:${phase.endPct -
+                                phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
+                              >
+                                <span class="phase-icon">${PHASE_ICONS[phase.name] ?? ''}</span>
+                              </div>
+                            `,
+                          )}
+                        </div>`,
+                      )}
                     </div>
                   `;
                 })}
