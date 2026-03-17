@@ -17,6 +17,7 @@ const PHASE_COLORS: Record<string, string> = {
   germination: '#5a9e7e',
   flowering: '#c95a8a',
   harvest: '#c0804a',
+  gap: '#3a6b38',
 };
 
 const PHASE_ICONS: Record<string, string> = {
@@ -30,8 +31,8 @@ interface ResolvedPhase {
   name: string;
   startPct: number;
   endPct: number;
-  // When a phase wraps past year-end it is split in two; iconPct marks where to place the icon
-  iconPct?: number;
+  // iconPct: where to render the icon. undefined = use startPct, null = no icon (split segment head)
+  iconPct?: number | null;
 }
 
 function dateToYearPct(dateStr: string): number {
@@ -43,14 +44,13 @@ function dateToYearPct(dateStr: string): number {
 function resolvePhases(phases: Record<string, { start?: string; end?: string }> | undefined): ResolvedPhase[] {
   if (!phases) return [];
 
+  // 1. Build raw phases with resolved start/end percentages
   const sorted = Object.entries(phases)
     .filter(([, r]) => r.start)
     .map(([name, r]) => ({ name, start: r.start!, end: r.end }))
     .sort((a, b) => a.start.localeCompare(b.start));
 
-  const result: ResolvedPhase[] = [];
-
-  sorted.forEach((p, i) => {
+  const raw: { name: string; startPct: number; endPct: number }[] = sorted.map((p, i) => {
     const startPct = dateToYearPct(p.start);
     let endPct: number;
     if (p.end) {
@@ -59,14 +59,31 @@ function resolvePhases(phases: Record<string, { start?: string; end?: string }> 
       const next = sorted[i + 1];
       endPct = next ? dateToYearPct(next.start) : startPct + 100 / 12;
     }
+    return { name: p.name, startPct, endPct };
+  });
 
-    if (endPct < startPct) {
-      // Phase wraps around year boundary — split into tail + head segments
-      const midPct = (startPct + 100) / 2; // icon on the tail segment
-      result.push({ name: p.name, startPct, endPct: 100, iconPct: midPct });
-      result.push({ name: p.name, startPct: 0, endPct, iconPct: null as unknown as number });
+  // 2. Insert gap segments between consecutive phases (not before first, not after last)
+  const withGaps: { name: string; startPct: number; endPct: number }[] = [];
+  raw.forEach((p, i) => {
+    withGaps.push(p);
+    if (i < raw.length - 1) {
+      const gapStart = p.endPct;
+      const gapEnd = raw[i + 1].startPct;
+      if (gapEnd > gapStart) {
+        withGaps.push({ name: 'gap', startPct: gapStart, endPct: gapEnd });
+      }
+    }
+  });
+
+  // 3. Split any segment that wraps past year-end into tail + head
+  const result: ResolvedPhase[] = [];
+  withGaps.forEach((seg) => {
+    if (seg.endPct < seg.startPct) {
+      const midPct = (seg.startPct + 100) / 2;
+      result.push({ name: seg.name, startPct: seg.startPct, endPct: 100, iconPct: midPct });
+      result.push({ name: seg.name, startPct: 0, endPct: seg.endPct, iconPct: null });
     } else {
-      result.push({ name: p.name, startPct, endPct });
+      result.push({ name: seg.name, startPct: seg.startPct, endPct: seg.endPct });
     }
   });
 
@@ -164,7 +181,7 @@ export class CropPlannerHarvestCard extends LitElement {
                             `,
                           )}
                           ${phases
-                            .filter((phase) => phase.iconPct !== null)
+                            .filter((phase) => phase.name !== 'gap' && phase.iconPct !== null)
                             .map((phase) => {
                               const pct = phase.iconPct ?? phase.startPct;
                               return html`
