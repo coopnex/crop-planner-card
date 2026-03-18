@@ -2,12 +2,13 @@ import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
+import { localize } from './localize';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
 const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
 const ENRICH_BUTTON_ENTITY_ID = 'button.enrich_crops_data';
-const ADD_CROP_BUTTON_ENTITY_ID = 'button.add_crop';
+
 const AI_STATE_ENTITY_ID = 'sensor.crop_ai_state';
 
 const AI_STATE_BADGES = [
@@ -93,7 +94,6 @@ export class CropPlannerCard extends LitElement {
               visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
             })),
           },
-          { type: 'custom:crop-planner-harvest-card' },
           {
             type: 'entities',
             title: '',
@@ -104,18 +104,21 @@ export class CropPlannerCard extends LitElement {
                   {
                     entity: 'script.add_crop',
                     icon: 'mdi:sprout',
+                    name: localize('button.add_crop', this._hass.language),
                     show_name: true,
                     tap_action: { action: 'more-info' },
                   },
                   {
                     entity: AI_BUTTON_ENTITY_ID,
                     icon: 'mdi:assistant',
+                    name: localize('button.generate_chores', this._hass.language),
                     show_name: true,
                     tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
                   },
                   {
                     entity: ENRICH_BUTTON_ENTITY_ID,
                     icon: 'mdi:database-refresh',
+                    name: localize('button.enrich_crops', this._hass.language),
                     show_name: true,
                     tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
                   },
@@ -123,6 +126,7 @@ export class CropPlannerCard extends LitElement {
               },
             ],
           },
+          { type: 'custom:crop-planner-harvest-card' },
           { type: 'entities', title: '', entities: cropEntityIds },
           { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
         ],
