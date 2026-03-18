@@ -7,6 +7,7 @@ const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
 const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
 const ENRICH_BUTTON_ENTITY_ID = 'button.enrich_crops_data';
+const ADD_CROP_BUTTON_ENTITY_ID = 'button.add_crop';
 const AI_STATE_ENTITY_ID = 'sensor.crop_ai_state';
 
 const AI_STATE_BADGES = [
@@ -100,6 +101,12 @@ export class CropPlannerCard extends LitElement {
               {
                 type: 'buttons',
                 entities: [
+                  {
+                    entity: 'script.add_crop',
+                    icon: 'mdi:sprout',
+                    show_name: true,
+                    tap_action: { action: 'more-info' },
+                  },
                   {
                     entity: AI_BUTTON_ENTITY_ID,
                     icon: 'mdi:assistant',
