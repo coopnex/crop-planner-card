@@ -3,5 +3,13 @@
     "add_crop": "Add crop",
     "generate_chores": "Generate chores",
     "enrich_crops": "Enrich crops"
+  },
+  "popup": {
+    "add_crop_title": "Add new crop",
+    "add_crop_submit": "Add crop",
+    "add_crop_success": "Crop added successfully!",
+    "field_name": "Name",
+    "field_species": "Species (optional)",
+    "field_quantity": "Quantity"
   }
 }

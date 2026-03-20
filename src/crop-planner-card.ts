@@ -2,12 +2,14 @@ import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
+import './crop-planner-add-crop-form';
 import { localize } from './localize';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
 const AI_BUTTON_ENTITY_ID = 'button.crop_generate_chores';
 const ENRICH_BUTTON_ENTITY_ID = 'button.enrich_crops_data';
+const ADD_CROP_BUTTON_ENTITY_ID = 'button.add_crop';
 
 const AI_STATE_ENTITY_ID = 'sensor.crop_ai_state';
 
@@ -106,7 +108,17 @@ export class CropPlannerCard extends LitElement {
                     icon: 'mdi:sprout',
                     name: localize('button.add_crop', this._hass.language),
                     show_name: true,
-                    tap_action: { action: 'more-info' },
+                    tap_action: {
+                      action: 'fire-dom-event',
+                      browser_mod: {
+                        service: 'browser_mod.popup',
+                        data: {
+                          title: localize('popup.add_crop_title', this._hass.language),
+                          dismissable: true,
+                          content: { type: 'custom:crop-planner-add-crop-form' },
+                        },
+                      },
+                    },
                   },
                   {
                     entity: AI_BUTTON_ENTITY_ID,
@@ -121,6 +133,13 @@ export class CropPlannerCard extends LitElement {
                     name: localize('button.enrich_crops', this._hass.language),
                     show_name: true,
                     tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+                  },
+                  {
+                    entity: ADD_CROP_BUTTON_ENTITY_ID,
+                    icon: 'mdi:database-refresh',
+                    name: localize('button.add_crop', this._hass.language) + '2',
+                    show_name: true,
+                    tap_action: { action: 'toggle', target: { entity_id: ADD_CROP_BUTTON_ENTITY_ID } },
                   },
                 ],
               },
