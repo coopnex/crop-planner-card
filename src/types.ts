@@ -24,4 +24,7 @@ export interface HomeAssistant {
     language: string;
   };
   callService(domain: string, service: string, data?: Record<string, unknown>): Promise<void>;
+  connection: {
+    sendMessagePromise<T>(message: Record<string, unknown>): Promise<T>;
+  };
 }

@@ -29,6 +29,17 @@ const AI_STATE_BADGES = [
     icon: 'mdi:pencil-circle',
     color: 'blue',
   },
+  {
+    state: 'generating_image',
+    icon: 'mdi:image-search',
+    color: 'yellow',
+  },
+  {
+    state: 'guessing_species',
+    icon: 'mdi:book-open-page-variant-outline',
+    color: 'green',
+  },
+
 ];
 
 @customElement('crop-planner-card')
@@ -39,6 +50,7 @@ export class CropPlannerCard extends LitElement {
   private _harvestCard: any = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
+  private _cropEntityIds: string[] = [];
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -50,6 +62,12 @@ export class CropPlannerCard extends LitElement {
     if (aiState !== this._lastAiState) {
       this._lastAiState = aiState;
       if (aiState === 'idle' && this._harvestCard) this._harvestCard.hass = hass;
+    }
+
+    const currentCropEntityIds = Object.keys(hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
+    if (currentCropEntityIds.length !== this._cropEntityIds.length) {
+      this._cropEntityIds = currentCropEntityIds;
+      this._cards[0].setConfig(this._buildVerticalStackConfig());
     }
   }
 
@@ -73,90 +91,100 @@ export class CropPlannerCard extends LitElement {
     this._config = config;
   }
 
-  async firstUpdated() {
-    const cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
-    const helpers = await (window as any).loadCardHelpers();
-
-    this._cards = [
-      helpers.createCardElement({
-        type: 'vertical-stack',
-        cards: [
-          {
-            type: 'heading',
-            heading: this._config.title ?? 'Crop Planner',
-            icon: 'mdi:sprout',
-            heading_style: 'title',
-            badges: AI_STATE_BADGES.map(({ state, icon, color }) => ({
-              type: 'entity',
-              entity: AI_STATE_ENTITY_ID,
-              show_state: true,
-              show_icon: true,
-              icon,
-              color,
-              visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
-            })),
-          },
-          {
-            type: 'entities',
-            title: '',
-            entities: [
-              {
-                type: 'buttons',
-                entities: [
-                  {
-                    entity: 'script.add_crop',
-                    icon: 'mdi:sprout',
-                    name: localize('button.add_crop', this._hass.language),
-                    show_name: true,
-                    tap_action: {
-                      action: 'fire-dom-event',
-                      browser_mod: {
-                        service: 'browser_mod.popup',
-                        data: {
-                          title: localize('popup.add_crop_title', this._hass.language),
-                          dismissable: true,
-                          content: { type: 'custom:crop-planner-add-crop-form' },
-                        },
+  private _buildVerticalStackConfig() {
+    return {
+      type: 'vertical-stack',
+      cards: [
+        {
+          type: 'heading',
+          heading: this._config.title ?? 'Crop Planner',
+          icon: 'mdi:sprout',
+          heading_style: 'title',
+          badges: AI_STATE_BADGES.map(({ state, icon, color }) => ({
+            type: 'entity',
+            entity: AI_STATE_ENTITY_ID,
+            show_state: true,
+            show_icon: true,
+            icon,
+            color,
+            visibility: [{ condition: 'state', entity: AI_STATE_ENTITY_ID, state }],
+          })),
+        },
+        {
+          type: 'entities',
+          title: '',
+          entities: [
+            {
+              type: 'buttons',
+              entities: [
+                {
+                  entity: 'script.add_crop',
+                  icon: 'mdi:sprout',
+                  name: localize('button.add_crop', this._hass.language),
+                  show_name: true,
+                  tap_action: {
+                    action: 'fire-dom-event',
+                    browser_mod: {
+                      service: 'browser_mod.popup',
+                      data: {
+                        title: localize('popup.add_crop_title', this._hass.language),
+                        dismissable: true,
+                        content: { type: 'custom:crop-planner-add-crop-form' },
                       },
                     },
                   },
-                  {
-                    entity: AI_BUTTON_ENTITY_ID,
-                    icon: 'mdi:assistant',
-                    name: localize('button.generate_chores', this._hass.language),
-                    show_name: true,
-                    tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
-                  },
-                  {
-                    entity: ENRICH_BUTTON_ENTITY_ID,
-                    icon: 'mdi:database-refresh',
-                    name: localize('button.enrich_crops', this._hass.language),
-                    show_name: true,
-                    tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
-                  },
-                  {
-                    entity: ADD_CROP_BUTTON_ENTITY_ID,
-                    icon: 'mdi:database-refresh',
-                    name: localize('button.add_crop', this._hass.language) + '2',
-                    show_name: true,
-                    tap_action: { action: 'toggle', target: { entity_id: ADD_CROP_BUTTON_ENTITY_ID } },
-                  },
-                ],
-              },
-            ],
-          },
-          { type: 'custom:crop-planner-harvest-card' },
-          { type: 'entities', title: '', entities: cropEntityIds },
-          { type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true },
-        ],
-      }),
-    ];
+                },
+                {
+                  entity: AI_BUTTON_ENTITY_ID,
+                  icon: 'mdi:assistant',
+                  name: localize('button.generate_chores', this._hass.language),
+                  show_name: true,
+                  tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
+                },
+                {
+                  entity: ENRICH_BUTTON_ENTITY_ID,
+                  icon: 'mdi:database-refresh',
+                  name: localize('button.enrich_crops', this._hass.language),
+                  show_name: true,
+                  tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+                },
+                {
+                  entity: ADD_CROP_BUTTON_ENTITY_ID,
+                  icon: 'mdi:database-refresh',
+                  name: localize('button.add_crop', this._hass.language) + '2',
+                  show_name: true,
+                  tap_action: { action: 'toggle', target: { entity_id: ADD_CROP_BUTTON_ENTITY_ID } },
+                },
+              ],
+            },
+          ],
+        },
+        { type: 'custom:crop-planner-harvest-card' },
+        { type: 'entities', title: '', entities: this._cropEntityIds },
+      ],
+    };
+  }
+
+  async firstUpdated() {
+    this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
+    const helpers = await (window as any).loadCardHelpers();
+
+    const todoCard = helpers.createCardElement({ type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true, hide_section_headers: true,
+                                                                                                                  hide_completed: true,
+                                                                                                                  display_order: 'duedate_asc' });
+    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig()), todoCard];
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
     const root = this.shadowRoot!.getElementById('root')!;
     this._cards[0].hass = this._hass;
     root.appendChild(this._cards[0]);
+
+    const todoWrapper = document.createElement('div');
+    todoWrapper.style.cssText = 'max-height: 500px; overflow-y: auto;';
+    todoCard.hass = this._hass;
+    todoWrapper.appendChild(todoCard);
+    root.appendChild(todoWrapper);
 
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));

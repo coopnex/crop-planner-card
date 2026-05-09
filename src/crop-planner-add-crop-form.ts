@@ -9,7 +9,7 @@ export class CropPlannerAddCropForm extends LitElement {
 
   setConfig(_config: Record<string, unknown>) {}
 
-  @state() private _submitting = false;
+  @state() private _busy = false;
   @state() private _submitted = false;
   @state() private _error = '';
 
@@ -52,10 +52,20 @@ export class CropPlannerAddCropForm extends LitElement {
     return (this.shadowRoot?.getElementById(id) as any)?.value?.trim() ?? '';
   }
 
+  private _closePopup() {
+    this.dispatchEvent(
+      new CustomEvent('ll-custom', {
+        bubbles: true,
+        composed: true,
+        detail: { browser_mod: { service: 'browser_mod.close_popup', data: {} } },
+      }),
+    );
+  }
+
   private async _submit() {
     const name = this._field('name');
     if (!name) return;
-    this._submitting = true;
+    this._busy = true;
     this._error = '';
     try {
       const data: Record<string, unknown> = { name };
@@ -65,19 +75,11 @@ export class CropPlannerAddCropForm extends LitElement {
       if (quantity > 1) data['quantity'] = quantity;
       await this.hass.callService('crop', 'create_crop', data);
       this._submitted = true;
-      setTimeout(() => {
-        this.dispatchEvent(
-          new CustomEvent('ll-custom', {
-            bubbles: true,
-            composed: true,
-            detail: { browser_mod: { service: 'browser_mod.close_popup', data: {} } },
-          }),
-        );
-      }, 1000);
+      setTimeout(() => this._closePopup(), 1500);
     } catch (e: unknown) {
       this._error = e instanceof Error ? e.message : String(e);
     } finally {
-      this._submitting = false;
+      this._busy = false;
     }
   }
 
@@ -102,7 +104,7 @@ export class CropPlannerAddCropForm extends LitElement {
           ></ha-textfield>
           ${this._error ? html`<div class="error">${this._error}</div>` : nothing}
           <div class="actions">
-            <ha-button unelevated .disabled=${this._submitting} @click=${this._submit}>
+            <ha-button unelevated .disabled=${this._busy} @click=${this._submit}>
               ${localize('popup.add_crop_submit', this.hass?.language)}
             </ha-button>
           </div>
