@@ -2,7 +2,6 @@ import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
-import './crop-planner-add-crop-form';
 import { localize } from './localize';
 
 const CROP_DOMAIN = 'crop';
@@ -119,17 +118,7 @@ export class CropPlannerCard extends LitElement {
                   icon: 'mdi:sprout',
                   name: localize('button.add_crop', this._hass.language),
                   show_name: true,
-                  tap_action: {
-                    action: 'fire-dom-event',
-                    browser_mod: {
-                      service: 'browser_mod.popup',
-                      data: {
-                        title: localize('popup.add_crop_title', this._hass.language),
-                        dismissable: true,
-                        content: { type: 'custom:crop-planner-add-crop-form' },
-                      },
-                    },
-                  },
+                  tap_action: { action: 'more-info' },
                 },
                 {
                   entity: AI_BUTTON_ENTITY_ID,
