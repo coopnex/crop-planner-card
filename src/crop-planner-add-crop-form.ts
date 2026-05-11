@@ -94,7 +94,6 @@ export class CropPlannerAddCropForm extends LitElement {
         <h2>${localize('popup.add_crop_title', this.hass?.language)}</h2>
         <div class="form">
           <ha-textfield id="name" label=${localize('popup.field_name', this.hass?.language)} required></ha-textfield>
-          <ha-textfield id="species" label=${localize('popup.field_species', this.hass?.language)}></ha-textfield>
           <ha-textfield
             id="quantity"
             label=${localize('popup.field_quantity', this.hass?.language)}

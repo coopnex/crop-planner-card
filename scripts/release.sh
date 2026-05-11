@@ -1,6 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ── Usage ─────────────────────────────────────────────────────────────────────
+usage() {
+  echo "Usage: script/release.sh [--bump major|minor|patch|snapshot] [--pre RC1] [--yes]"
+  echo ""
+  echo "  --bump   Version bump type (major, minor, patch, snapshot)"
+  echo "  --pre    Pre-release suffix (e.g. RC1, beta-1); required on non-main branches"
+  echo "  --yes    Skip confirmation prompt"
+  exit 1
+}
+
+# ── Parse flags ───────────────────────────────────────────────────────────────
+BUMP_TYPE=""
+PRE_SUFFIX=""
+YES=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --bump) BUMP_TYPE="$2"; shift 2 ;;
+    --pre)  PRE_SUFFIX="$2"; shift 2 ;;
+    --yes)  YES=true; shift ;;
+    -h|--help) usage ;;
+    *) echo "Unknown option: $1" >&2; usage ;;
+  esac
+done
+
 # ── 1. Uncommitted changes check ─────────────────────────────────────────────
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "Error: You have uncommitted changes. Please commit or stash them first." >&2
@@ -29,18 +54,22 @@ IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
 
 echo ""
 echo "Current version: $CURRENT_VERSION"
-echo "Select version bump type:"
-if $IS_MAIN; then
+
+if [[ -z "$BUMP_TYPE" ]]; then
+  echo "Select version bump type:"
   select BUMP_TYPE in major minor patch snapshot; do
     [[ -n "$BUMP_TYPE" ]] && break
     echo "Invalid selection."
   done
 else
-  select BUMP_TYPE in major minor patch snapshot; do
-    [[ -n "$BUMP_TYPE" ]] && break
-    echo "Invalid selection."
-  done
+  echo "Bump type: $BUMP_TYPE"
 fi
+
+# Validate bump type
+case "$BUMP_TYPE" in
+  major|minor|patch|snapshot) ;;
+  *) echo "Invalid bump type: $BUMP_TYPE" >&2; usage ;;
+esac
 
 # ── 5. Calculate new version ──────────────────────────────────────────────────
 case "$BUMP_TYPE" in
@@ -53,7 +82,9 @@ esac
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
 echo ""
-if $IS_MAIN; then
+if [[ -n "$PRE_SUFFIX" ]]; then
+  NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
+elif $IS_MAIN; then
   read -rp "Enter pre-release suffix (e.g. RC1, beta-1) or leave empty for a stable release: " PRE_SUFFIX
   [[ -n "$PRE_SUFFIX" ]] && NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
 else
@@ -67,10 +98,13 @@ fi
 
 echo ""
 echo "Version bump: $CURRENT_VERSION → $NEW_VERSION"
-read -rp "Proceed with this release? [y/N] " CONFIRM
-if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-  echo "Aborted."
-  exit 0
+
+if ! $YES; then
+  read -rp "Proceed with this release? [y/N] " CONFIRM
+  if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    exit 0
+  fi
 fi
 
 # Use node to update package.json to preserve formatting

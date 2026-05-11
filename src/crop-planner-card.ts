@@ -141,20 +141,20 @@ export class CropPlannerCard extends LitElement {
                   show_name: true,
                   tap_action: { action: 'toggle', target: { entity_id: AI_BUTTON_ENTITY_ID } },
                 },
-                {
-                  entity: ENRICH_BUTTON_ENTITY_ID,
-                  icon: 'mdi:database-refresh',
-                  name: localize('button.enrich_crops', this._hass.language),
-                  show_name: true,
-                  tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
-                },
-                {
-                  entity: ADD_CROP_BUTTON_ENTITY_ID,
-                  icon: 'mdi:database-refresh',
-                  name: localize('button.add_crop', this._hass.language) + '2',
-                  show_name: true,
-                  tap_action: { action: 'toggle', target: { entity_id: ADD_CROP_BUTTON_ENTITY_ID } },
-                },
+//                 {
+//                   entity: ENRICH_BUTTON_ENTITY_ID,
+//                   icon: 'mdi:database-refresh',
+//                   name: localize('button.enrich_crops', this._hass.language),
+//                   show_name: true,
+//                   tap_action: { action: 'toggle', target: { entity_id: ENRICH_BUTTON_ENTITY_ID } },
+//                 },
+//                 {
+//                   entity: ADD_CROP_BUTTON_ENTITY_ID,
+//                   icon: 'mdi:database-refresh',
+//                   name: localize('button.add_crop', this._hass.language) + '2',
+//                   show_name: true,
+//                   tap_action: { action: 'toggle', target: { entity_id: ADD_CROP_BUTTON_ENTITY_ID } },
+//                 },
               ],
             },
           ],
@@ -170,7 +170,6 @@ export class CropPlannerCard extends LitElement {
     const helpers = await (window as any).loadCardHelpers();
 
     const todoCard = helpers.createCardElement({ type: 'todo-list', entity: TODO_ENTITY_ID, hide_completed: true, hide_section_headers: true,
-                                                                                                                  hide_completed: true,
                                                                                                                   display_order: 'duedate_asc' });
     this._cards = [helpers.createCardElement(this._buildVerticalStackConfig()), todoCard];
     this._cardsReady = true;
