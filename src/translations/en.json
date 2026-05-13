@@ -3,5 +3,23 @@
     "add_crop": "Add crop",
     "generate_chores": "Generate chores",
     "enrich_crops": "Enrich crops"
+  },
+  "popup": {
+    "add_crop_title": "Add new crop",
+    "add_crop_submit": "Add crop",
+    "add_crop_success": "Crop added successfully!",
+    "field_name": "Name",
+    "field_species": "Species hint (optional)",
+    "field_quantity": "Quantity",
+    "search_species": "Search species",
+    "select_species_title": "Select species",
+    "select_species_label": "Species",
+    "no_species": "— None —",
+    "refine_search": "Refine search",
+    "refine_search_button": "Search",
+    "back": "Back",
+    "searching": "Searching…",
+    "species_saved": "Species updated!",
+    "confirm_species": "Confirm"
   }
 }
