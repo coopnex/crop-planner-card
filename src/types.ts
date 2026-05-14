@@ -28,3 +28,12 @@ export interface HomeAssistant {
     sendMessagePromise<T>(message: Record<string, unknown>): Promise<T>;
   };
 }
+
+export interface HaCard extends HTMLElement {
+  hass: HomeAssistant;
+  setConfig(config: Record<string, unknown>): void;
+}
+
+export interface CardHelpers {
+  createCardElement(config: Record<string, unknown>): HaCard;
+}

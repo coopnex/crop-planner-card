@@ -1,7 +1,8 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import type { CropPlannerCardConfig, HomeAssistant } from './types';
+import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
+import './crop-planner-add-dialog';
 import { localize } from './localize';
 
 const CROP_DOMAIN = 'crop';
@@ -42,11 +43,13 @@ const AI_STATE_BADGES = [
 export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
-  private _cards: any[] = [];
-  private _harvestCard: any = null;
+  private _cards: HaCard[] = [];
+  private _harvestCard: HaCard | null = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
+
+  @state() private _showAddCropDialog = false;
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -118,7 +121,7 @@ export class CropPlannerCard extends LitElement {
                   icon: 'mdi:sprout',
                   name: localize('button.add_crop', this._hass.language),
                   show_name: true,
-                  tap_action: { action: 'more-info' },
+                  tap_action: { action: 'fire-dom-event', event_data: { type: 'show-add-crop-dialog' } },
                 },
                 {
                   entity: AI_BUTTON_ENTITY_ID,
@@ -133,22 +136,23 @@ export class CropPlannerCard extends LitElement {
         },
         { type: 'custom:crop-planner-harvest-card' },
         { type: 'entities', title: '', entities: this._cropEntityIds },
+        {
+          type: 'todo-list',
+          title: '',
+          entity: TODO_ENTITY_ID,
+          hide_completed: true,
+          hide_section_headers: true,
+          display_order: 'duedate_asc',
+        },
       ],
     };
   }
 
   async firstUpdated() {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
-    const helpers = await (window as any).loadCardHelpers();
+    const helpers = await (window as unknown as { loadCardHelpers: () => Promise<CardHelpers> }).loadCardHelpers();
 
-    const todoCard = helpers.createCardElement({
-      type: 'todo-list',
-      entity: TODO_ENTITY_ID,
-      hide_completed: true,
-      hide_section_headers: true,
-      display_order: 'duedate_asc',
-    });
-    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig()), todoCard];
+    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
@@ -156,11 +160,12 @@ export class CropPlannerCard extends LitElement {
     this._cards[0].hass = this._hass;
     root.appendChild(this._cards[0]);
 
-    const todoWrapper = document.createElement('div');
-    todoWrapper.style.cssText = 'max-height: 500px; overflow-y: auto;';
-    todoCard.hass = this._hass;
-    todoWrapper.appendChild(todoCard);
-    root.appendChild(todoWrapper);
+    this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.event_data?.type === 'show-add-crop-dialog') {
+        this._showAddCropDialog = true;
+      }
+    });
 
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -168,7 +173,16 @@ export class CropPlannerCard extends LitElement {
   }
 
   render() {
-    return html`<div id="root"></div>`;
+    return html`
+      <div id="root"></div>
+      <crop-planner-add-dialog
+        .hass=${this._hass}
+        .open=${this._showAddCropDialog}
+        @dialog-closed=${() => {
+          this._showAddCropDialog = false;
+        }}
+      ></crop-planner-add-dialog>
+    `;
   }
 }
 
