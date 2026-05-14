@@ -43,8 +43,8 @@ const AI_STATE_BADGES = [
 export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
-  private _cards: any[] = [];
-  private _harvestCard: any = null;
+  private _cards: HTMLElement[] = [];
+  private _harvestCard: HTMLElement | null = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
@@ -136,14 +136,25 @@ export class CropPlannerCard extends LitElement {
         },
         { type: 'custom:crop-planner-harvest-card' },
         { type: 'entities', title: '', entities: this._cropEntityIds },
-        { type: 'todo-list', title: '', entity: 'todo.crop_chores' }
+        {
+          type: 'todo-list',
+          title: '',
+          entity: TODO_ENTITY_ID,
+          hide_completed: true,
+          hide_section_headers: true,
+          display_order: 'duedate_asc',
+        },
       ],
     };
   }
 
   async firstUpdated() {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
-    const helpers = await (window as any).loadCardHelpers();
+    const helpers = await (
+      window as Window & {
+        loadCardHelpers: () => Promise<{ createCardElement: (config: Record<string, unknown>) => HTMLElement }>;
+      }
+    ).loadCardHelpers();
 
     this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
     this._cardsReady = true;

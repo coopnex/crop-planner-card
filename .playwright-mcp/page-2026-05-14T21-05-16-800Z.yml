@@ -1,0 +1,617 @@
+- generic [ref=e10]:
+  - complementary [ref=e11]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic "Alternar panel lateral" [ref=e16]:
+          - button "Alternar panel lateral" [ref=e17] [cursor=pointer]:
+            - generic [ref=e19]:
+              - img
+        - generic [ref=e20]: Home Assistant
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic:
+            - listitem [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]:
+                - generic [ref=e28]:
+                  - img
+                - generic [ref=e30]: Vista general
+            - listitem [ref=e32] [cursor=pointer]:
+              - generic [ref=e33]:
+                - generic [ref=e35]:
+                  - img
+                - generic [ref=e37]: Crop Planner
+            - listitem [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]:
+                - generic [ref=e41]:
+                  - img
+                - generic [ref=e43]: Mapa
+            - listitem [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]:
+                - generic [ref=e47]:
+                  - img
+                - generic [ref=e49]: Energía
+            - listitem [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]:
+                - generic [ref=e53]:
+                  - img
+                - generic [ref=e55]: Actividad
+            - listitem [ref=e57] [cursor=pointer]:
+              - generic [ref=e58]:
+                - generic [ref=e59]:
+                  - img
+                - generic [ref=e61]: Historial
+            - listitem [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]:
+                - generic [ref=e66]:
+                  - img
+                - generic [ref=e68]: Browser Mod
+            - listitem [ref=e70] [cursor=pointer]:
+              - generic [ref=e71]:
+                - generic [ref=e72]:
+                  - img
+                - generic [ref=e74]: Calendario
+            - listitem [ref=e76] [cursor=pointer]:
+              - generic [ref=e77]:
+                - generic [ref=e78]:
+                  - img
+                - generic [ref=e80]: Medios
+            - listitem [ref=e82] [cursor=pointer]:
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - img
+                - generic [ref=e86]: Listas de tareas pendientes
+        - generic [ref=e87]:
+          - generic:
+            - listitem [ref=e89] [cursor=pointer]:
+              - generic [ref=e90]:
+                - generic:
+                  - generic:
+                    - generic [ref=e91]:
+                      - img
+                    - generic: "1"
+                - generic [ref=e93]: Configuración
+                - generic [ref=e94]: "1"
+            - listitem [ref=e96] [cursor=pointer]:
+              - generic [ref=e97]:
+                - generic:
+                  - generic:
+                    - generic [ref=e98]:
+                      - img
+                    - generic: "3"
+                - generic [ref=e100]: Notificaciones
+                - generic [ref=e101]: "3"
+            - listitem [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]:
+                - generic [ref=e106]: x
+                - generic [ref=e108]: xum
+  - generic [ref=e113]:
+    - generic [ref=e117]:
+      - generic [ref=e118]:
+        - generic:
+          - generic "Añadir a Home Assistant" [ref=e120]:
+            - button [ref=e121] [cursor=pointer]:
+              - generic [ref=e123]:
+                - img
+          - generic:
+            - generic: Añadir dispositivo
+            - generic: Crear automatización
+            - generic: Crear área
+            - generic: Añadir persona
+      - button [ref=e126] [cursor=pointer]:
+        - generic [ref=e128]:
+          - img
+      - button [ref=e131] [cursor=pointer]:
+        - generic [ref=e133]:
+          - img
+      - button [ref=e136] [cursor=pointer]:
+        - generic [ref=e138]:
+          - img
+    - generic [ref=e155]:
+      - generic [ref=e156]:
+        - generic [ref=e158]:
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - generic [ref=e165]:
+                - img
+              - paragraph [ref=e166]: Crop Planner
+            - generic "Crop Planner Estado" [ref=e171]:
+              - generic [ref=e172]:
+                - generic [ref=e175]:
+                  - img
+                - generic [ref=e176]: En espera
+          - generic [ref=e184]:
+            - generic:
+              - button "Añadir cultivo" [ref=e187] [cursor=pointer]:
+                - 'generic "Toque: Mantener:Mostrar más información: Add Crop" [ref=e189]':
+                  - generic [ref=e192]:
+                    - img
+                - generic [ref=e193]: Añadir cultivo
+              - button "Generar tareas" [ref=e197] [cursor=pointer]:
+                - 'generic "Toque: Alternar Crop Planner Sugerir tareas Mantener:Mostrar más información: Crop Planner Sugerir tareas" [ref=e199]':
+                  - generic [ref=e202]:
+                    - img
+                - generic [ref=e203]: Generar tareas
+          - generic [ref=e208]:
+            - generic [ref=e211]:
+              - generic [ref=e212]: Jan
+              - generic [ref=e213]: Feb
+              - generic [ref=e214]: Mar
+              - generic [ref=e215]: Apr
+              - generic [ref=e216]: May
+              - generic [ref=e217]: Jun
+              - generic [ref=e218]: Jul
+              - generic [ref=e219]: Aug
+              - generic [ref=e220]: Sep
+              - generic [ref=e221]: Oct
+              - generic [ref=e222]: Nov
+              - generic [ref=e223]: Dec
+            - generic [ref=e224]:
+              - generic "Tomate de barbastro" [ref=e225]:
+                - img "Tomate de barbastro" [ref=e226]
+                - generic: Tomate de barbastro
+              - generic [ref=e227]:
+                - generic "sowing" [ref=e240]
+                - generic "germination" [ref=e241]
+                - generic "gap" [ref=e242]
+                - generic "flowering" [ref=e243]
+                - generic "harvest" [ref=e244]
+                - generic "sowing" [ref=e245]: 🌱
+                - generic "germination" [ref=e246]: 🌿
+                - generic "flowering" [ref=e247]: 🌸
+                - generic "harvest" [ref=e248]: 🍂
+            - generic [ref=e249]:
+              - generic "Tomate de colgar" [ref=e250]:
+                - img "Tomate de colgar" [ref=e251]
+                - generic: Tomate de colgar
+              - generic [ref=e252]:
+                - generic "sowing" [ref=e265]
+                - generic "germination" [ref=e266]
+                - generic "gap" [ref=e267]
+                - generic "flowering" [ref=e268]
+                - generic "gap" [ref=e269]
+                - generic "harvest" [ref=e270]
+                - generic "sowing" [ref=e271]: 🌱
+                - generic "germination" [ref=e272]: 🌿
+                - generic "flowering" [ref=e273]: 🌸
+                - generic "harvest" [ref=e274]: 🍂
+            - generic [ref=e275]:
+              - generic "Cebolla" [ref=e276]:
+                - img "Cebolla" [ref=e277]
+                - generic: Cebolla
+              - generic [ref=e278]:
+                - generic "sowing" [ref=e291]
+                - generic "germination" [ref=e292]
+                - generic "gap" [ref=e293]
+                - generic "harvest" [ref=e294]
+                - generic "sowing" [ref=e295]: 🌱
+                - generic "germination" [ref=e296]: 🌿
+                - generic "harvest" [ref=e297]: 🍂
+            - generic [ref=e298]:
+              - generic "Pepino" [ref=e299]:
+                - img "Pepino" [ref=e300]
+                - generic: Pepino
+              - generic [ref=e301]:
+                - generic "sowing" [ref=e314]
+                - generic "germination" [ref=e315]
+                - generic "gap" [ref=e316]
+                - generic "flowering" [ref=e317]
+                - generic "harvest" [ref=e318]
+                - generic "sowing" [ref=e319]: 🌱
+                - generic "germination" [ref=e320]: 🌿
+                - generic "flowering" [ref=e321]: 🌸
+                - generic "harvest" [ref=e322]: 🍂
+            - generic [ref=e323]:
+              - generic "Tomate" [ref=e324]:
+                - img "Tomate" [ref=e325]
+                - generic: Tomate
+              - generic [ref=e326]:
+                - generic "sowing" [ref=e339]
+                - generic "germination" [ref=e340]
+                - generic "gap" [ref=e341]
+                - generic "flowering" [ref=e342]
+                - generic "harvest" [ref=e343]
+                - generic "sowing" [ref=e344]: 🌱
+                - generic "germination" [ref=e345]: 🌿
+                - generic "flowering" [ref=e346]: 🌸
+                - generic "harvest" [ref=e347]: 🍂
+            - generic [ref=e348]:
+              - generic "Cebolla de figueres" [ref=e349]:
+                - img "Cebolla de figueres" [ref=e350]
+                - generic: Cebolla de figueres
+              - generic [ref=e351]:
+                - generic "sowing" [ref=e364]
+                - generic "germination" [ref=e365]
+                - generic "gap" [ref=e366]
+                - generic "flowering" [ref=e367]
+                - generic "gap" [ref=e368]
+                - generic "harvest" [ref=e369]
+                - generic "sowing" [ref=e370]: 🌱
+                - generic "germination" [ref=e371]: 🌿
+                - generic "flowering" [ref=e372]: 🌸
+                - generic "harvest" [ref=e373]: 🍂
+            - generic [ref=e374]:
+              - generic "Chile Habanero" [ref=e375]:
+                - img "Chile Habanero" [ref=e376]
+                - generic: Chile Habanero
+              - generic [ref=e377]:
+                - generic "sowing" [ref=e390]
+                - generic "germination" [ref=e391]
+                - generic "gap" [ref=e392]
+                - generic "flowering" [ref=e393]
+                - generic "harvest" [ref=e394]
+                - generic "sowing" [ref=e395]: 🌱
+                - generic "germination" [ref=e396]: 🌿
+                - generic "flowering" [ref=e397]: 🌸
+                - generic "harvest" [ref=e398]: 🍂
+            - generic [ref=e399]:
+              - generic "Ají amarillo" [ref=e400]:
+                - img "Ají amarillo" [ref=e401]
+                - generic: Ají amarillo
+              - generic [ref=e402]:
+                - generic "sowing" [ref=e415]
+                - generic "germination" [ref=e416]
+                - generic "gap" [ref=e417]
+                - generic "flowering" [ref=e418]
+                - generic "gap" [ref=e419]
+                - generic "harvest" [ref=e420]
+                - generic "sowing" [ref=e421]: 🌱
+                - generic "germination" [ref=e422]: 🌿
+                - generic "flowering" [ref=e423]: 🌸
+                - generic "harvest" [ref=e424]: 🍂
+            - generic [ref=e425]:
+              - generic "Patata" [ref=e426]:
+                - img "Patata" [ref=e427]
+                - generic: Patata
+              - generic [ref=e428]:
+                - generic "sowing" [ref=e441]
+                - generic "germination" [ref=e442]
+                - generic "gap" [ref=e443]
+                - generic "flowering" [ref=e444]
+                - generic "gap" [ref=e445]
+                - generic "harvest" [ref=e446]
+                - generic "sowing" [ref=e447]: 🌱
+                - generic "germination" [ref=e448]: 🌿
+                - generic "flowering" [ref=e449]: 🌸
+                - generic "harvest" [ref=e450]: 🍂
+            - generic [ref=e451]:
+              - generic "Ajo" [ref=e452]:
+                - img "Ajo" [ref=e453]
+                - generic: Ajo
+              - generic [ref=e454]:
+                - generic "sowing" [ref=e467]
+                - generic "sowing" [ref=e468]
+                - generic "gap" [ref=e469]
+                - generic "germination" [ref=e470]
+                - generic "germination" [ref=e471]
+                - generic "gap" [ref=e472]
+                - generic "flowering" [ref=e473]
+                - generic "gap" [ref=e474]
+                - generic "harvest" [ref=e475]
+                - generic "sowing" [ref=e476]: 🌱
+                - generic "germination" [ref=e477]: 🌿
+                - generic "flowering" [ref=e478]: 🌸
+                - generic "harvest" [ref=e479]: 🍂
+            - generic [ref=e480]:
+              - generic "Calabacín" [ref=e481]:
+                - img "Calabacín" [ref=e482]
+                - generic: Calabacín
+              - generic [ref=e483]:
+                - generic "sowing" [ref=e496]
+                - generic "germination" [ref=e497]
+                - generic "gap" [ref=e498]
+                - generic "flowering" [ref=e499]
+                - generic "harvest" [ref=e500]
+                - generic "sowing" [ref=e501]: 🌱
+                - generic "germination" [ref=e502]: 🌿
+                - generic "flowering" [ref=e503]: 🌸
+                - generic "harvest" [ref=e504]: 🍂
+            - generic [ref=e505]:
+              - generic "Berenjena" [ref=e506]:
+                - img "Berenjena" [ref=e507]
+                - generic: Berenjena
+              - generic [ref=e508]:
+                - generic "sowing" [ref=e521]
+                - generic "germination" [ref=e522]
+                - generic "gap" [ref=e523]
+                - generic "flowering" [ref=e524]
+                - generic "harvest" [ref=e525]
+                - generic "sowing" [ref=e526]: 🌱
+                - generic "germination" [ref=e527]: 🌿
+                - generic "flowering" [ref=e528]: 🌸
+                - generic "harvest" [ref=e529]: 🍂
+          - generic [ref=e533]:
+            - generic [ref=e537] [cursor=pointer]:
+              - generic "Tomate de barbastro" [ref=e539]
+              - generic [ref=e541]:
+                - generic: Bien
+            - generic [ref=e545] [cursor=pointer]:
+              - generic "Tomate de colgar" [ref=e547]
+              - generic [ref=e549]:
+                - generic: Bien
+            - generic [ref=e553] [cursor=pointer]:
+              - generic "Cebolla" [ref=e555]
+              - generic [ref=e557]:
+                - generic: Bien
+            - generic [ref=e561] [cursor=pointer]:
+              - generic "Pepino" [ref=e563]
+              - generic [ref=e565]:
+                - generic: Siembra
+            - generic [ref=e569] [cursor=pointer]:
+              - generic "Tomate" [ref=e571]
+              - generic [ref=e573]:
+                - generic: Floración
+            - generic [ref=e577] [cursor=pointer]:
+              - generic "Cebolla de figueres" [ref=e579]
+              - generic [ref=e581]:
+                - generic: Bien
+            - generic [ref=e585] [cursor=pointer]:
+              - generic "Chile Habanero" [ref=e587]
+              - generic [ref=e589]:
+                - generic: Bien
+            - generic [ref=e593] [cursor=pointer]:
+              - generic "Ají amarillo" [ref=e595]
+              - generic [ref=e597]:
+                - generic: Bien
+            - generic [ref=e601] [cursor=pointer]:
+              - generic "Patata" [ref=e603]
+              - generic [ref=e605]:
+                - generic: Bien
+            - generic [ref=e609] [cursor=pointer]:
+              - generic "Ajo" [ref=e611]
+              - generic [ref=e613]:
+                - generic: Floración
+            - generic [ref=e617] [cursor=pointer]:
+              - generic "Calabacín" [ref=e619]
+              - generic [ref=e621]:
+                - generic: Bien
+            - generic [ref=e625] [cursor=pointer]:
+              - generic "Berenjena" [ref=e627]
+              - generic [ref=e629]:
+                - generic: Bien
+        - generic [ref=e632]:
+          - generic:
+            - generic [ref=e636]:
+              - textbox [ref=e637]:
+                - /placeholder: Añadir elemento
+              - generic "Añadir elemento" [ref=e639]:
+                - button [ref=e641] [cursor=pointer]:
+                  - generic [ref=e643]:
+                    - img
+            - list [ref=e646]:
+              - generic:
+                - generic [ref=e647] [cursor=pointer]:
+                  - generic [ref=e650]:
+                    - checkbox
+                  - generic [ref=e652]:
+                    - generic [ref=e653]: 📋 Revisión del entutorado
+                    - paragraph [ref=e655]: Asegurar que el tallo principal del tomate esté bien sujeto al tutor o soporte, dejando espacio para que el tallo engrose sin estrangularse.
+                    - generic [ref=e656]:
+                      - generic [ref=e657]:
+                        - img
+                      - generic [ref=e658]: Anteayer
+                - generic [ref=e659] [cursor=pointer]:
+                  - generic [ref=e662]:
+                    - checkbox
+                  - generic [ref=e664]:
+                    - generic [ref=e665]: 🔍 Inspección preventiva de plagas
+                    - paragraph [ref=e667]: Revisar el envés de las hojas y los brotes tiernos del tomate para detectar pulgones o mosca blanca, comunes con el aumento de temperaturas en mayo.
+                    - generic [ref=e668]:
+                      - generic [ref=e669]:
+                        - img
+                      - generic [ref=e670]: Ayer
+                - generic [ref=e671] [cursor=pointer]:
+                  - generic [ref=e674]:
+                    - checkbox
+                  - generic [ref=e676]:
+                    - generic [ref=e677]: 📋 💧 Revisión técnica del sistema de goteo
+                    - paragraph [ref=e679]: Verificar que no haya emisores obstruidos por cal o suciedad, asegurando que el agua llegue correctamente a la zona radicular de las nuevas plantas.
+                    - generic [ref=e680]:
+                      - generic [ref=e681]:
+                        - img
+                      - generic [ref=e682]: Ayer
+                - generic [ref=e683] [cursor=pointer]:
+                  - generic [ref=e686]:
+                    - checkbox
+                  - generic [ref=e688]:
+                    - generic [ref=e689]: 🌿 Abonado de floración para el tomate
+                    - paragraph [ref=e691]: Aplicar un fertilizante orgánico rico en potasio y fósforo para fortalecer la planta antes de que comience la etapa de floración el 15 de mayo.
+                    - generic [ref=e692]:
+                      - generic [ref=e693]:
+                        - img
+                      - text: Hoy
+                - generic [ref=e694] [cursor=pointer]:
+                  - generic [ref=e697]:
+                    - checkbox
+                  - generic [ref=e699]:
+                    - generic [ref=e700]: 📋 🌼 Plantación de Tagetes (Claveles de moro)
+                    - paragraph [ref=e702]: Plantar estas flores entre los cultivos para atraer insectos polinizadores y secretar sustancias que mantienen a raya los nematodos del suelo.
+                    - generic [ref=e703]:
+                      - generic [ref=e704]:
+                        - img
+                      - text: Hoy
+                - generic [ref=e705] [cursor=pointer]:
+                  - generic [ref=e708]:
+                    - checkbox
+                  - generic [ref=e710]:
+                    - generic [ref=e711]: 🌿 🍂 Abonado de fondo para nuevos trasplantes
+                    - paragraph [ref=e713]: Incorporar humus de lombriz o compost en los hoyos de plantación de los pimientos y berenjenas previstos para darles un arranque vigoroso.
+                    - generic [ref=e714]:
+                      - generic [ref=e715]:
+                        - img
+                      - text: Hoy
+                - generic [ref=e716] [cursor=pointer]:
+                  - generic [ref=e719]:
+                    - checkbox
+                  - generic [ref=e721]:
+                    - generic [ref=e722]: 💧 Ajuste de frecuencia de riego
+                    - paragraph [ref=e724]: Incrementar la regularidad del riego conforme suben las temperaturas para mantener una humedad constante, evitando el estrés hídrico en la floración.
+                    - generic [ref=e725]:
+                      - generic [ref=e726]:
+                        - img
+                      - generic [ref=e727]: Mañana
+                - generic [ref=e728] [cursor=pointer]:
+                  - generic [ref=e731]:
+                    - checkbox
+                  - generic [ref=e733]:
+                    - generic [ref=e734]: 🌱 🌿 Asociación con Albahaca
+                    - paragraph [ref=e736]: Plantar albahaca cerca de los tomates (crop.tomate) para mejorar su crecimiento, sabor y ayudar a repeler pulgones y otros insectos no deseados.
+                    - generic [ref=e737]:
+                      - generic [ref=e738]:
+                        - img
+                      - generic [ref=e739]: Mañana
+                - generic [ref=e740] [cursor=pointer]:
+                  - generic [ref=e743]:
+                    - checkbox
+                  - generic [ref=e745]:
+                    - generic [ref=e746]: 📋 Limpieza de hierbas competidoras
+                    - paragraph [ref=e748]: Retirar manualmente las hierbas espontáneas que compiten por nutrientes y agua con la planta de tomate antes de que semillen.
+                    - generic [ref=e749]:
+                      - generic [ref=e750]:
+                        - img
+                      - generic [ref=e751]: Pasado mañana
+                - generic [ref=e752] [cursor=pointer]:
+                  - generic [ref=e755]:
+                    - checkbox
+                  - generic [ref=e757]:
+                    - generic [ref=e758]: 🔍 🔍 Protección contra caracoles y babosas
+                    - paragraph [ref=e760]: Colocar barreras físicas o revisar manualmente el huerto al amanecer para proteger los brotes tiernos de los nuevos cultivos tras días nublados.
+                    - generic [ref=e761]:
+                      - generic [ref=e762]:
+                        - img
+                      - generic [ref=e763]: Pasado mañana
+                - generic [ref=e764] [cursor=pointer]:
+                  - generic [ref=e767]:
+                    - checkbox
+                  - generic [ref=e769]:
+                    - generic [ref=e770]: 🌱 🌱 Siembra escalonada de Rabanitos
+                    - paragraph [ref=e772]: Sembrar rabanitos en los huecos libres entre plantas grandes; es un cultivo rápido que se cosecha en 3-4 semanas.
+                    - generic [ref=e773]:
+                      - generic [ref=e774]:
+                        - img
+                      - generic [ref=e775]: Dentro de 3 días
+                - generic [ref=e776] [cursor=pointer]:
+                  - generic [ref=e779]:
+                    - checkbox
+                  - generic [ref=e781]:
+                    - generic [ref=e782]: ✂️ Poda de chupones axilares
+                    - paragraph [ref=e784]: Eliminar los pequeños brotes que crecen en las axilas de las hojas del tomate para mejorar la aireación y dirigir la energía a la producción de frutos.
+                    - generic [ref=e785]:
+                      - generic [ref=e786]:
+                        - img
+                      - generic [ref=e787]: Dentro de 4 días
+                - generic [ref=e788] [cursor=pointer]:
+                  - generic [ref=e791]:
+                    - checkbox
+                  - generic [ref=e793]:
+                    - generic [ref=e794]: 🔍 🔍 Vigilancia específica de Tuta absoluta
+                    - paragraph [ref=e796]: Inspeccionar las hojas de los tomates buscando pequeñas galerías transparentes, signo de la polilla del tomate, muy frecuente en esta época en la zona mediterránea.
+                    - generic [ref=e797]:
+                      - generic [ref=e798]:
+                        - img
+                      - generic [ref=e799]: Dentro de 4 días
+                - generic [ref=e800] [cursor=pointer]:
+                  - generic [ref=e803]:
+                    - checkbox
+                  - generic [ref=e805]:
+                    - generic [ref=e806]: 🌱 Plantación de Pimientos
+                    - paragraph [ref=e808]: Aprovechar las temperaturas mínimas estables por encima de 15°C para trasplantar plantones de pimiento en una zona soleada.
+                    - generic [ref=e809]:
+                      - generic [ref=e810]:
+                        - img
+                      - generic [ref=e811]: La próxima semana
+                - generic [ref=e812] [cursor=pointer]:
+                  - generic [ref=e815]:
+                    - checkbox
+                  - generic [ref=e817]:
+                    - generic [ref=e818]: 🌱 🌱 Siembra de Judías Verdes
+                    - paragraph [ref=e820]: Realizar siembra directa de judías de mata baja o de enrame. Es el momento ideal para que germinen rápido con el calor del suelo.
+                    - generic [ref=e821]:
+                      - generic [ref=e822]:
+                        - img
+                      - generic [ref=e823]: La próxima semana
+                - generic [ref=e824] [cursor=pointer]:
+                  - generic [ref=e827]:
+                    - checkbox
+                  - generic [ref=e829]:
+                    - generic [ref=e830]: 🌱 Plantación de Berenjenas
+                    - paragraph [ref=e832]: Es el momento ideal en el clima mediterráneo para introducir berenjenas, que requieren mucho sol y calor para desarrollarse bien.
+                    - generic [ref=e833]:
+                      - generic [ref=e834]:
+                        - img
+                      - generic [ref=e835]: La próxima semana
+                - generic [ref=e836] [cursor=pointer]:
+                  - generic [ref=e839]:
+                    - checkbox
+                  - generic [ref=e841]:
+                    - generic [ref=e842]: 🌱 🥒 Plantación de Pepinos
+                    - paragraph [ref=e844]: Trasplantar plantones de pepino en una zona con posibilidad de entutorado vertical para optimizar el espacio del huerto.
+                    - generic [ref=e845]:
+                      - generic [ref=e846]:
+                        - img
+                      - generic [ref=e847]: La próxima semana
+                - generic [ref=e848] [cursor=pointer]:
+                  - generic [ref=e851]:
+                    - checkbox
+                  - generic [ref=e853]:
+                    - generic [ref=e854]: 🌱 Siembra de Calabacín
+                    - paragraph [ref=e856]: Realizar siembra directa o trasplante de calabacín; es un cultivo de crecimiento rápido que complementará bien el espacio del huerto.
+                    - generic [ref=e857]:
+                      - generic [ref=e858]:
+                        - img
+                      - generic [ref=e859]: Dentro de 2 semanas
+                - generic [ref=e860] [cursor=pointer]:
+                  - generic [ref=e863]:
+                    - checkbox
+                  - generic [ref=e865]:
+                    - generic [ref=e866]: 🔍 🔍 Control de Oídio y Mildiu
+                    - paragraph [ref=e868]: Revisar las hojas ante la aparición de manchas blanquecinas o pardas, especialmente tras episodios de humedad matutina o lluvias primaverales.
+                    - generic [ref=e869]:
+                      - generic [ref=e870]:
+                        - img
+                      - generic [ref=e871]: Dentro de 2 semanas
+                - generic [ref=e872] [cursor=pointer]:
+                  - generic [ref=e875]:
+                    - checkbox
+                  - generic [ref=e877]:
+                    - generic [ref=e878]: 📋 Instalación de acolchado (mulching)
+                    - paragraph [ref=e880]: Colocar una capa de paja o restos vegetales secos alrededor de la base de los tomates para conservar la humedad del suelo y evitar malas hierbas.
+                    - generic [ref=e881]:
+                      - generic [ref=e882]:
+                        - img
+                      - generic [ref=e883]: Dentro de 2 semanas
+      - generic:
+        - generic:
+          - generic "Añadir nuevo cultivo":
+            - dialog [ref=e884]:
+              - generic [ref=e885]:
+                - generic:
+                  - banner [ref=e888]:
+                    - generic [ref=e889]:
+                      - generic "Cerrar" [ref=e893]:
+                        - button "Cerrar" [ref=e894] [cursor=pointer]:
+                          - generic [ref=e896]:
+                            - img
+                      - generic [ref=e899]: Añadir nuevo cultivo
+                  - generic [ref=e902]:
+                    - generic [ref=e904]:
+                      - generic:
+                        - generic:
+                          - generic: Nombre
+                      - textbox "Nombre" [ref=e906]:
+                        - /placeholder: ""
+                    - generic [ref=e908]:
+                      - generic:
+                        - generic:
+                          - generic: Cantidad
+                      - spinbutton "Cantidad" [ref=e910]: "1"
+                    - generic [ref=e912]:
+                      - generic:
+                        - generic:
+                          - generic: Pista de especie (opcional)
+                      - textbox "Pista de especie (opcional)" [ref=e914]:
+                        - /placeholder: ""
+              - contentinfo [ref=e915]:
+                - contentinfo [ref=e917]:
+                  - generic [ref=e918]:
+                    - button "Añadir cultivo" [disabled]:
+                      - generic: Añadir cultivo
