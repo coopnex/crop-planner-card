@@ -18,7 +18,12 @@ export interface AddDialogContext {
 
 export function renderAddDialog(ctx: AddDialogContext): TemplateResult {
   return html`
-    <ha-dialog ?open=${ctx.open} header-title=${localize('popup.add_crop_title', ctx.lang)} prevent-scrim-close @closed=${ctx.onClose}>
+    <ha-dialog
+      ?open=${ctx.open}
+      header-title=${localize('popup.add_crop_title', ctx.lang)}
+      prevent-scrim-close
+      @closed=${ctx.onClose}
+    >
       <div>
         <ha-input
           .label=${localize('popup.field_name', ctx.lang)}
@@ -40,11 +45,9 @@ export function renderAddDialog(ctx: AddDialogContext): TemplateResult {
         ></ha-input>
       </div>
       <ha-dialog-footer slot="footer">
-        <ha-button
-          slot="primaryAction"
-          ?disabled=${!ctx.name.trim() || ctx.submitting}
-          @click=${ctx.onSubmit}
-        >${localize('popup.add_crop_submit', ctx.lang)}</ha-button>
+        <ha-button slot="primaryAction" ?disabled=${!ctx.name.trim() || ctx.submitting} @click=${ctx.onSubmit}
+          >${localize('popup.add_crop_submit', ctx.lang)}</ha-button
+        >
       </ha-dialog-footer>
     </ha-dialog>
   `;
