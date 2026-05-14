@@ -1,4 +1,0 @@
-[      91ms] [INFO] %cBROWSER_MOD 2.9.0 IS INSTALLED
-    %cBrowserID: browser_mod_b1825aa4_752c9308 color: green; font-weight: bold  @ http://localhost:8123/browser_mod.js?2.9.0:610
-[     507ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8123/local/crop_planner/2026-05-13_211230_generate_plant_image.png:0
-[     507ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8123/local/crop_planner/2026-05-13_211649_generate_plant_image.png:0

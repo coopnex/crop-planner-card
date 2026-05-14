@@ -1,6 +1,6 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import type { CropPlannerCardConfig, HomeAssistant } from './types';
+import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
 import './crop-planner-add-dialog';
 import { localize } from './localize';
@@ -43,8 +43,8 @@ const AI_STATE_BADGES = [
 export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
-  private _cards: HTMLElement[] = [];
-  private _harvestCard: HTMLElement | null = null;
+  private _cards: HaCard[] = [];
+  private _harvestCard: HaCard | null = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
@@ -150,11 +150,7 @@ export class CropPlannerCard extends LitElement {
 
   async firstUpdated() {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
-    const helpers = await (
-      window as Window & {
-        loadCardHelpers: () => Promise<{ createCardElement: (config: Record<string, unknown>) => HTMLElement }>;
-      }
-    ).loadCardHelpers();
+    const helpers = await (window as unknown as { loadCardHelpers: () => Promise<CardHelpers> }).loadCardHelpers();
 
     this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
     this._cardsReady = true;
