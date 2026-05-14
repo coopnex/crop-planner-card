@@ -3,6 +3,7 @@ import type { TemplateResult } from 'lit';
 import { localize } from './localize';
 
 export interface AddDialogContext {
+  open: boolean;
   lang: string;
   name: string;
   quantity: number;
@@ -17,33 +18,34 @@ export interface AddDialogContext {
 
 export function renderAddDialog(ctx: AddDialogContext): TemplateResult {
   return html`
-    <ha-dialog open @closed=${ctx.onClose}>
-      <span slot="heading">${localize('popup.add_crop_title', ctx.lang)}</span>
+    <ha-dialog ?open=${ctx.open} header-title=${localize('popup.add_crop_title', ctx.lang)} prevent-scrim-close @closed=${ctx.onClose}>
       <div>
-        <ha-textfield
-          label=${localize('popup.field_name', ctx.lang)}
+        <ha-input
+          .label=${localize('popup.field_name', ctx.lang)}
           .value=${ctx.name}
           @input=${ctx.onNameInput}
-          required
-          dialogInitialFocus
-        ></ha-textfield>
-        <ha-textfield
-          label=${localize('popup.field_quantity', ctx.lang)}
+          autofocus
+        ></ha-input>
+        <ha-input
+          .label=${localize('popup.field_quantity', ctx.lang)}
           type="number"
           min="1"
           .value=${String(ctx.quantity)}
           @input=${ctx.onQuantityInput}
-        ></ha-textfield>
-        <ha-textfield
-          label=${localize('popup.field_species', ctx.lang)}
+        ></ha-input>
+        <ha-input
+          .label=${localize('popup.field_species', ctx.lang)}
           .value=${ctx.species}
           @input=${ctx.onSpeciesInput}
-        ></ha-textfield>
+        ></ha-input>
       </div>
-      <mwc-button slot="primaryAction" ?disabled=${!ctx.name.trim() || ctx.submitting} @click=${ctx.onSubmit}
-        >${localize('popup.add_crop_submit', ctx.lang)}</mwc-button
-      >
-      <mwc-button slot="secondaryAction" @click=${ctx.onClose}> ${localize('popup.back', ctx.lang)} </mwc-button>
+      <ha-dialog-footer slot="footer">
+        <ha-button
+          slot="primaryAction"
+          ?disabled=${!ctx.name.trim() || ctx.submitting}
+          @click=${ctx.onSubmit}
+        >${localize('popup.add_crop_submit', ctx.lang)}</ha-button>
+      </ha-dialog-footer>
     </ha-dialog>
   `;
 }

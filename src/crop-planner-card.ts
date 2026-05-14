@@ -167,7 +167,7 @@ export class CropPlannerCard extends LitElement {
 
     this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      if (detail?.type === 'show-add-crop-dialog') {
+      if (detail?.event_data?.type === 'show-add-crop-dialog') {
         this._showAddCropDialog = true;
       }
     });

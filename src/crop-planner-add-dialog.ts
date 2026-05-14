@@ -13,8 +13,19 @@ export class CropPlannerAddDialog extends LitElement {
   @state() private _species = '';
   @state() private _submitting = false;
 
-  private _close() {
+  // Called when ha-dialog fires @closed (after animation), but only acts if
+  // parent hasn't already set open=false (submit path). This prevents double dispatch.
+  private _onHaDialogClosed() {
+    if (!this.open) return;
+    this._resetForm();
     this.dispatchEvent(new CustomEvent('dialog-closed', { bubbles: true, composed: true }));
+  }
+
+  private _resetForm() {
+    this._name = '';
+    this._quantity = 1;
+    this._species = '';
+    this._submitting = false;
   }
 
   private async _submit() {
@@ -23,13 +34,19 @@ export class CropPlannerAddDialog extends LitElement {
     const data: Record<string, unknown> = { name: this._name.trim(), quantity: this._quantity };
     if (this._species.trim()) data.species = this._species.trim();
     await this.hass.callService('crop', 'create_crop', data);
-    this._submitting = false;
-    this._close();
+    // Notify parent to set open=false; Lit will then set ha-dialog ?open=false
+    // which triggers ha-dialog's close animation. The @closed guard above
+    // will see open=false by then and skip the second dispatch.
+    this._resetForm();
+    this.dispatchEvent(new CustomEvent('dialog-closed', { bubbles: true, composed: true }));
   }
 
   render() {
-    if (!this.open) return nothing;
+    if (!this.hass) return nothing;
+    // Always render ha-dialog (never remove from DOM abruptly).
+    // Use ?open to let ha-dialog animate open/close naturally.
     return renderAddDialog({
+      open: this.open,
       lang: this.hass.language,
       name: this._name,
       quantity: this._quantity,
@@ -45,7 +62,7 @@ export class CropPlannerAddDialog extends LitElement {
         this._species = (e.target as HTMLInputElement).value;
       },
       onSubmit: () => this._submit(),
-      onClose: () => this._close(),
+      onClose: () => this._onHaDialogClosed(),
     });
   }
 }
