@@ -2,6 +2,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import esbuild from 'rollup-plugin-esbuild';
 import serve from 'rollup-plugin-serve';
 import json from '@rollup/plugin-json';
+import { string } from 'rollup-plugin-string';
 
 const onwarn = (warning, warn) => {
   if (warning.code === 'THIS_IS_UNDEFINED' && warning.id?.includes('/node_modules/')) {
@@ -22,6 +23,7 @@ export default {
     resolve(),
     esbuild({ target: 'es2022' }),
     json(),
+    string({ include: 'src/css/*.css' }),
     serve({
       contentBase: './dist',
       host: '0.0.0.0',

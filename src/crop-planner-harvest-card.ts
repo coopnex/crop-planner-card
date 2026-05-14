@@ -1,8 +1,8 @@
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import type { HomeAssistant, CropAttributes } from './types';
-import { harvestCardStyles } from './crop-planner-harvest-card.styles';
+import styles from './css/crop-planner-harvest-card.css';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -121,7 +121,7 @@ export class CropPlannerHarvestCard extends LitElement {
     return { columns: 'full', rows, min_rows: 4 };
   }
 
-  static styles = harvestCardStyles;
+  static styles = unsafeCSS(styles);
 
   render() {
     if (!this.hass) return nothing;
