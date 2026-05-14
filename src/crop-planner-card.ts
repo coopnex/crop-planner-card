@@ -1,9 +1,9 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from './types';
-import './crop-planner-harvest-card';
-import './crop-planner-add-dialog';
 import { localize } from './localize';
+import './crop-planner-harvest-card';
+import './crop-planner-add-crop-dialog';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
@@ -175,13 +175,13 @@ export class CropPlannerCard extends LitElement {
   render() {
     return html`
       <div id="root"></div>
-      <crop-planner-add-dialog
+      <crop-planner-add-crop-dialog
         .hass=${this._hass}
         .open=${this._showAddCropDialog}
         @dialog-closed=${() => {
           this._showAddCropDialog = false;
         }}
-      ></crop-planner-add-dialog>
+      ></crop-planner-add-crop-dialog>
     `;
   }
 }
