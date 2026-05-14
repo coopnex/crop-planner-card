@@ -40,14 +40,10 @@ export function renderAddDialog(ctx: AddDialogContext): TemplateResult {
           @input=${ctx.onSpeciesInput}
         ></ha-textfield>
       </div>
-      <mwc-button
-        slot="primaryAction"
-        ?disabled=${!ctx.name.trim() || ctx.submitting}
-        @click=${ctx.onSubmit}
-      >${localize('popup.add_crop_submit', ctx.lang)}</mwc-button>
-      <mwc-button slot="secondaryAction" @click=${ctx.onClose}>
-        ${localize('popup.back', ctx.lang)}
-      </mwc-button>
+      <mwc-button slot="primaryAction" ?disabled=${!ctx.name.trim() || ctx.submitting} @click=${ctx.onSubmit}
+        >${localize('popup.add_crop_submit', ctx.lang)}</mwc-button
+      >
+      <mwc-button slot="secondaryAction" @click=${ctx.onClose}> ${localize('popup.back', ctx.lang)} </mwc-button>
     </ha-dialog>
   `;
 }
