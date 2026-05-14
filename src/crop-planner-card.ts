@@ -136,6 +136,7 @@ export class CropPlannerCard extends LitElement {
         },
         { type: 'custom:crop-planner-harvest-card' },
         { type: 'entities', title: '', entities: this._cropEntityIds },
+        { type: 'todo-list', title: '', entity: 'todo.crop_chores' }
       ],
     };
   }
@@ -144,26 +145,13 @@ export class CropPlannerCard extends LitElement {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as any).loadCardHelpers();
 
-    const todoCard = helpers.createCardElement({
-      type: 'todo-list',
-      entity: TODO_ENTITY_ID,
-      hide_completed: true,
-      hide_section_headers: true,
-      display_order: 'duedate_asc',
-    });
-    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig()), todoCard];
+    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
     const root = this.shadowRoot!.getElementById('root')!;
     this._cards[0].hass = this._hass;
     root.appendChild(this._cards[0]);
-
-    const todoWrapper = document.createElement('div');
-    todoWrapper.style.cssText = 'max-height: 500px; overflow-y: auto;';
-    todoCard.hass = this._hass;
-    todoWrapper.appendChild(todoCard);
-    root.appendChild(todoWrapper);
 
     this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
       const detail = (e as CustomEvent).detail;
