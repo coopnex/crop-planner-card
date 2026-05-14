@@ -2,6 +2,7 @@ import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CropPlannerCardConfig, HomeAssistant } from './types';
 import './crop-planner-harvest-card';
+import './crop-planner-add-dialog';
 import { localize } from './localize';
 
 const CROP_DOMAIN = 'crop';
@@ -47,6 +48,8 @@ export class CropPlannerCard extends LitElement {
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
+
+  @state() private _showAddCropDialog = false;
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -118,7 +121,7 @@ export class CropPlannerCard extends LitElement {
                   icon: 'mdi:sprout',
                   name: localize('button.add_crop', this._hass.language),
                   show_name: true,
-                  tap_action: { action: 'more-info' },
+                  tap_action: { action: 'fire-dom-event', event_data: { type: 'show-add-crop-dialog' } },
                 },
                 {
                   entity: AI_BUTTON_ENTITY_ID,
@@ -162,13 +165,29 @@ export class CropPlannerCard extends LitElement {
     todoWrapper.appendChild(todoCard);
     root.appendChild(todoWrapper);
 
+    this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.type === 'show-add-crop-dialog') {
+        this._showAddCropDialog = true;
+      }
+    });
+
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));
     this._harvestCard = this._cards[0].shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
   }
 
   render() {
-    return html`<div id="root"></div>`;
+    return html`
+      <div id="root"></div>
+      <crop-planner-add-dialog
+        .hass=${this._hass}
+        .open=${this._showAddCropDialog}
+        @dialog-closed=${() => {
+          this._showAddCropDialog = false;
+        }}
+      ></crop-planner-add-dialog>
+    `;
   }
 }
 
