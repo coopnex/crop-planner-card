@@ -95,20 +95,8 @@ export class CropPlannerHarvestCard extends LitElement {
   private _hass!: HomeAssistant;
 
   set hass(hass: HomeAssistant) {
-    const old = this._hass;
     this._hass = hass;
-    if (!old || this._cropAttrsChanged(old, hass)) this.requestUpdate();
-  }
-
-  private _cropAttrsChanged(oldHass: HomeAssistant, newHass: HomeAssistant): boolean {
-    const oldIds = Object.keys(oldHass.states).filter((id) => id.startsWith('crop.'));
-    const newIds = Object.keys(newHass.states).filter((id) => id.startsWith('crop.'));
-    if (oldIds.length !== newIds.length) return true;
-    return newIds.some((id) => {
-      const o = oldHass.states[id]?.attributes;
-      const n = newHass.states[id]?.attributes;
-      return JSON.stringify(o) !== JSON.stringify(n);
-    });
+    this.requestUpdate();
   }
 
   get hass(): HomeAssistant {

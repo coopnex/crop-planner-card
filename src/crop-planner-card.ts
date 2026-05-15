@@ -44,7 +44,7 @@ const AI_STATE_BADGES = [
 export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
-  private _card: HaCard | null = null;
+  private _cards: HaCard[] = [];
   private _harvestCard: HaCard | null = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
@@ -58,7 +58,7 @@ export class CropPlannerCard extends LitElement {
     this._hass = hass;
     if (!this._cardsReady) return;
 
-    if (this._card) this._card.hass = hass;
+    this._cards.forEach((card) => (card.hass = hass));
 
     const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
     if (aiState !== this._lastAiState) {
@@ -69,7 +69,7 @@ export class CropPlannerCard extends LitElement {
     const currentCropEntityIds = Object.keys(hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     if (currentCropEntityIds.length !== this._cropEntityIds.length) {
       this._cropEntityIds = currentCropEntityIds;
-      this._card?.setConfig(this._buildVerticalStackConfig());
+      this._cards[0].setConfig(this._buildVerticalStackConfig());
     }
   }
 
@@ -165,13 +165,13 @@ export class CropPlannerCard extends LitElement {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as unknown as { loadCardHelpers: () => Promise<CardHelpers> }).loadCardHelpers();
 
-    this._card = helpers.createCardElement(this._buildVerticalStackConfig());
+    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
 
     const root = this.shadowRoot!.getElementById('root')!;
-    this._card.hass = this._hass;
-    root.appendChild(this._card);
+    this._cards[0].hass = this._hass;
+    root.appendChild(this._cards[0]);
 
     this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -186,7 +186,7 @@ export class CropPlannerCard extends LitElement {
 
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));
-    this._harvestCard = this._card.shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
+    this._harvestCard = this._cards[0].shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
   }
 
   render() {
