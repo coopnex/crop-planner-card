@@ -4,7 +4,7 @@ import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from '
 import { localize } from './localize';
 import './crop-planner-harvest-card';
 import './crop-planner-add-crop-dialog';
-import './crop-planner-more-info-card';
+import './crop-planner-more-info-dialog';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
@@ -51,6 +51,8 @@ export class CropPlannerCard extends LitElement {
   private _cropEntityIds: string[] = [];
 
   @state() private _showAddCropDialog = false;
+  @state() private _showMoreInfoDialog = false;
+  @state() private _moreInfoEntityId = '';
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -143,13 +145,7 @@ export class CropPlannerCard extends LitElement {
             entity: entity_id,
             tap_action: {
               action: 'fire-dom-event',
-              browser_mod: {
-                service: 'browser_mod.popup',
-                data: {
-                  title: '',
-                  content: { type: 'custom:crop-planner-more-info-card', entity_id },
-                },
-              },
+              event_data: { type: 'show-crop-more-info', entity_id },
             },
           })),
         },
@@ -182,6 +178,10 @@ export class CropPlannerCard extends LitElement {
       if (detail?.event_data?.type === 'show-add-crop-dialog') {
         this._showAddCropDialog = true;
       }
+      if (detail?.event_data?.type === 'show-crop-more-info') {
+        this._moreInfoEntityId = detail.event_data.entity_id;
+        this._showMoreInfoDialog = true;
+      }
     });
 
     // Wait for the vertical-stack to render its children before grabbing the reference
@@ -199,6 +199,14 @@ export class CropPlannerCard extends LitElement {
           this._showAddCropDialog = false;
         }}
       ></crop-planner-add-crop-dialog>
+      <crop-planner-more-info-dialog
+        .hass=${this._hass}
+        .open=${this._showMoreInfoDialog}
+        .entityId=${this._moreInfoEntityId}
+        @dialog-closed=${() => {
+          this._showMoreInfoDialog = false;
+        }}
+      ></crop-planner-more-info-dialog>
     `;
   }
 }
