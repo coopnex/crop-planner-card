@@ -3,8 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant } from './types';
 import { localize } from './localize';
 
-@customElement('crop-planner-add-dialog')
-export class CropPlannerAddDialog extends LitElement {
+@customElement('crop-planner-add-crop-dialog')
+export class CropPlannerAddCropDialog extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant;
   @property({ type: Boolean }) open = false;
 
@@ -81,6 +81,6 @@ export class CropPlannerAddDialog extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'crop-planner-add-dialog': CropPlannerAddDialog;
+    'crop-planner-add-crop-dialog': CropPlannerAddCropDialog;
   }
 }

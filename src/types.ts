@@ -15,6 +15,9 @@ export interface CropAttributes {
   friendly_name?: string;
   entity_picture?: string;
   phases?: Record<string, { start?: string; end?: string }>;
+  name?: string;
+  quantity?: number;
+  species?: string | null;
 }
 
 export interface HomeAssistant {

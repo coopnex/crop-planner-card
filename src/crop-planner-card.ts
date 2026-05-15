@@ -1,9 +1,10 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from './types';
-import './crop-planner-harvest-card';
-import './crop-planner-add-dialog';
 import { localize } from './localize';
+import './crop-planner-harvest-card';
+import './crop-planner-add-crop-dialog';
+import './crop-planner-more-info-dialog';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
@@ -50,6 +51,8 @@ export class CropPlannerCard extends LitElement {
   private _cropEntityIds: string[] = [];
 
   @state() private _showAddCropDialog = false;
+  @state() private _showMoreInfoDialog = false;
+  @state() private _moreInfoEntityId = '';
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -135,7 +138,17 @@ export class CropPlannerCard extends LitElement {
           ],
         },
         { type: 'custom:crop-planner-harvest-card' },
-        { type: 'entities', title: '', entities: this._cropEntityIds },
+        {
+          type: 'entities',
+          title: '',
+          entities: this._cropEntityIds.map((entity_id) => ({
+            entity: entity_id,
+            tap_action: {
+              action: 'fire-dom-event',
+              event_data: { type: 'show-crop-more-info', entity_id },
+            },
+          })),
+        },
         {
           type: 'todo-list',
           title: '',
@@ -165,6 +178,10 @@ export class CropPlannerCard extends LitElement {
       if (detail?.event_data?.type === 'show-add-crop-dialog') {
         this._showAddCropDialog = true;
       }
+      if (detail?.event_data?.type === 'show-crop-more-info') {
+        this._moreInfoEntityId = detail.event_data.entity_id;
+        this._showMoreInfoDialog = true;
+      }
     });
 
     // Wait for the vertical-stack to render its children before grabbing the reference
@@ -175,13 +192,21 @@ export class CropPlannerCard extends LitElement {
   render() {
     return html`
       <div id="root"></div>
-      <crop-planner-add-dialog
+      <crop-planner-add-crop-dialog
         .hass=${this._hass}
         .open=${this._showAddCropDialog}
         @dialog-closed=${() => {
           this._showAddCropDialog = false;
         }}
-      ></crop-planner-add-dialog>
+      ></crop-planner-add-crop-dialog>
+      <crop-planner-more-info-dialog
+        .hass=${this._hass}
+        .open=${this._showMoreInfoDialog}
+        .entityId=${this._moreInfoEntityId}
+        @dialog-closed=${() => {
+          this._showMoreInfoDialog = false;
+        }}
+      ></crop-planner-more-info-dialog>
     `;
   }
 }
