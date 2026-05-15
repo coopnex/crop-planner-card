@@ -49,30 +49,18 @@ export class CropPlannerCard extends LitElement {
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
-  private _lastRelevantSnapshot = '';
 
   @state() private _showAddCropDialog = false;
   @state() private _showMoreInfoDialog = false;
   @state() private _moreInfoEntityId = '';
 
-  private _relevantSnapshot(hass: HomeAssistant): string {
-    const cropStates = this._cropEntityIds.map((id) => `${id}:${hass.states[id]?.state ?? ''}`).join(',');
-    const aiState = hass.states[AI_STATE_ENTITY_ID]?.state ?? '';
-    return `${cropStates}|${aiState}`;
-  }
-
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     if (!this._cardsReady) return;
 
-    const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
-    const snapshot = this._relevantSnapshot(hass);
-
-    if (snapshot === this._lastRelevantSnapshot) return;
-    this._lastRelevantSnapshot = snapshot;
-
     if (this._card) this._card.hass = hass;
 
+    const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
     if (aiState !== this._lastAiState) {
       this._lastAiState = aiState;
       if (aiState === 'idle' && this._harvestCard) this._harvestCard.hass = hass;
@@ -180,7 +168,6 @@ export class CropPlannerCard extends LitElement {
     this._card = helpers.createCardElement(this._buildVerticalStackConfig());
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
-    this._lastRelevantSnapshot = this._relevantSnapshot(this._hass);
 
     const root = this.shadowRoot!.getElementById('root')!;
     this._card.hass = this._hass;
