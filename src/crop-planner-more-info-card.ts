@@ -1,0 +1,286 @@
+import { LitElement, html, css, nothing } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import type { CropAttributes, HomeAssistant } from './types';
+
+const PHASE_COLORS: Record<string, string> = {
+  sowing: '#a8d4a5',
+  germination: '#5db38a',
+  flowering: '#d4607a',
+  harvest: '#d4a06a',
+  gap: '#7bc275',
+};
+
+const PHASE_ICONS: Record<string, string> = {
+  sowing: '🌱',
+  germination: '🌿',
+  flowering: '🌸',
+  harvest: '🍂',
+};
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const REF_YEAR = 2024;
+const YEAR_START = new Date(REF_YEAR, 0, 1).getTime();
+const YEAR_END = new Date(REF_YEAR + 1, 0, 1).getTime();
+const YEAR_MS = YEAR_END - YEAR_START;
+
+interface ResolvedPhase {
+  name: string;
+  startPct: number;
+  endPct: number;
+  iconPct?: number | null;
+}
+
+function dateToYearPct(dateStr: string): number {
+  const [, month, day] = dateStr.split('-').map(Number);
+  const t = new Date(REF_YEAR, month - 1, day).getTime();
+  return ((t - YEAR_START) / YEAR_MS) * 100;
+}
+
+function resolvePhases(phases: Record<string, { start?: string; end?: string }> | undefined): ResolvedPhase[] {
+  if (!phases) return [];
+
+  const sorted = Object.entries(phases)
+    .filter(([, r]) => r.start)
+    .map(([name, r]) => ({ name, start: r.start!, end: r.end }))
+    .sort((a, b) => a.start.localeCompare(b.start));
+
+  const raw = sorted.map((p, i) => {
+    const startPct = dateToYearPct(p.start);
+    let endPct: number;
+    if (p.end) {
+      endPct = dateToYearPct(p.end);
+    } else {
+      const next = sorted[i + 1];
+      endPct = next ? dateToYearPct(next.start) : startPct + 100 / 12;
+    }
+    return { name: p.name, startPct, endPct };
+  });
+
+  const withGaps: { name: string; startPct: number; endPct: number }[] = [];
+  raw.forEach((p, i) => {
+    withGaps.push(p);
+    if (i < raw.length - 1) {
+      const gapStart = p.endPct;
+      const gapEnd = raw[i + 1].startPct;
+      if (gapEnd > gapStart) withGaps.push({ name: 'gap', startPct: gapStart, endPct: gapEnd });
+    }
+  });
+
+  const result: ResolvedPhase[] = [];
+  withGaps.forEach((seg) => {
+    if (seg.endPct < seg.startPct) {
+      const midPct = (seg.startPct + 100) / 2;
+      result.push({ name: seg.name, startPct: seg.startPct, endPct: 100, iconPct: midPct });
+      result.push({ name: seg.name, startPct: 0, endPct: seg.endPct, iconPct: null });
+    } else {
+      result.push({ name: seg.name, startPct: seg.startPct, endPct: seg.endPct });
+    }
+  });
+
+  return result;
+}
+
+@customElement('crop-planner-more-info-card')
+export class CropPlannerMoreInfoCard extends LitElement {
+  private _hass!: HomeAssistant;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _config: any;
+
+  set hass(hass: HomeAssistant) {
+    this._hass = hass;
+    this.requestUpdate();
+  }
+
+  get hass(): HomeAssistant {
+    return this._hass;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setConfig(config: any) {
+    this._config = config;
+  }
+
+  static styles = css`
+    :host {
+      display: block;
+    }
+    .hero {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: var(--ha-card-border-radius, 12px) var(--ha-card-border-radius, 12px) 0 0;
+      display: block;
+    }
+    .body {
+      padding: 16px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .name {
+      font-size: 1.4em;
+      font-weight: 600;
+      flex: 1;
+    }
+    .phase-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 500;
+      background: var(--secondary-background-color);
+    }
+    .details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-bottom: 16px;
+      font-size: 0.9em;
+      color: var(--secondary-text-color);
+    }
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .timeline-label {
+      font-size: 0.75em;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--secondary-text-color);
+      margin-bottom: 6px;
+    }
+    .bar-track {
+      position: relative;
+      height: 28px;
+      background: var(--secondary-background-color);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .phase-segment {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border-radius: 0;
+    }
+    .phase-icon {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      pointer-events: none;
+    }
+    .month-tick {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 1px;
+      background: rgba(0, 0, 0, 0.08);
+    }
+    .months-row {
+      display: flex;
+      margin-top: 2px;
+    }
+    .month-label {
+      flex: 1;
+      text-align: center;
+      font-size: 0.65em;
+      color: var(--secondary-text-color);
+    }
+    .month-label.current {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    .no-entity {
+      padding: 24px;
+      text-align: center;
+      color: var(--secondary-text-color);
+    }
+  `;
+
+  render() {
+    if (!this._hass || !this._config?.entity_id) {
+      return html`<div class="no-entity">No entity configured.</div>`;
+    }
+
+    const entity = this._hass.states[this._config.entity_id];
+    if (!entity) {
+      return html`<div class="no-entity">Entity not found: ${this._config.entity_id}</div>`;
+    }
+
+    const attrs = entity.attributes as CropAttributes;
+    const name = attrs.name ?? attrs.friendly_name ?? entity.entity_id.split('.')[1];
+    const state = entity.state;
+    const phases = resolvePhases(attrs.phases);
+    const currentMonth = new Date().getMonth();
+
+    const phaseIcon = PHASE_ICONS[state] ?? '';
+    const phaseLabel = state !== 'ok' ? state : '';
+
+    return html`
+      ${attrs.entity_picture ? html`<img class="hero" src="${attrs.entity_picture}" alt="${name}" />` : nothing}
+      <div class="body">
+        <div class="header">
+          <span class="name">${name}</span>
+          ${phaseLabel ? html`<span class="phase-badge">${phaseIcon} ${phaseLabel}</span>` : nothing}
+        </div>
+        <div class="details">
+          ${attrs.species ? html`<span class="detail-item">🔬 ${attrs.species}</span>` : nothing}
+          ${attrs.quantity != null
+            ? html`<span class="detail-item">🌿 ${attrs.quantity} plant${attrs.quantity !== 1 ? 's' : ''}</span>`
+            : nothing}
+        </div>
+        ${phases.length > 0
+          ? html`
+              <div class="timeline-label">Lifecycle</div>
+              <div class="bar-track">
+                ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
+                ${phases.map(
+                  (phase) => html`
+                    <div
+                      class="phase-segment"
+                      title="${phase.name}"
+                      style="left:${phase.startPct}%;width:${phase.endPct - phase.startPct}%;background:${PHASE_COLORS[
+                        phase.name
+                      ] ?? '#888'}"
+                    ></div>
+                  `,
+                )}
+                ${phases
+                  .filter((p) => p.name !== 'gap' && p.iconPct !== null)
+                  .map((phase) => {
+                    const pct = phase.iconPct ?? phase.startPct;
+                    return html`<span class="phase-icon" style="left:${pct}%">${PHASE_ICONS[phase.name] ?? ''}</span>`;
+                  })}
+              </div>
+              <div class="months-row">
+                ${MONTHS.map(
+                  (m, i) => html`<div class="month-label ${i === currentMonth ? 'current' : ''}">${m}</div>`,
+                )}
+              </div>
+            `
+          : nothing}
+      </div>
+    `;
+  }
+}
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'crop-planner-more-info-card',
+  name: 'Crop More Info',
+  preview: false,
+  description: 'Shows detailed information about a crop entity — intended for use in browser_mod popups.',
+});
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'crop-planner-more-info-card': CropPlannerMoreInfoCard;
+  }
+}

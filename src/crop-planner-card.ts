@@ -4,6 +4,7 @@ import type { CardHelpers, CropPlannerCardConfig, HaCard, HomeAssistant } from '
 import { localize } from './localize';
 import './crop-planner-harvest-card';
 import './crop-planner-add-crop-dialog';
+import './crop-planner-more-info-card';
 
 const CROP_DOMAIN = 'crop';
 const TODO_ENTITY_ID = 'todo.crop_chores';
@@ -135,7 +136,23 @@ export class CropPlannerCard extends LitElement {
           ],
         },
         { type: 'custom:crop-planner-harvest-card' },
-        { type: 'entities', title: '', entities: this._cropEntityIds },
+        {
+          type: 'entities',
+          title: '',
+          entities: this._cropEntityIds.map((entity_id) => ({
+            entity: entity_id,
+            tap_action: {
+              action: 'fire-dom-event',
+              browser_mod: {
+                service: 'browser_mod.popup',
+                data: {
+                  title: '',
+                  content: { type: 'custom:crop-planner-more-info-card', entity_id },
+                },
+              },
+            },
+          })),
+        },
         {
           type: 'todo-list',
           title: '',
