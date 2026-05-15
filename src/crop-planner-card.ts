@@ -44,23 +44,35 @@ const AI_STATE_BADGES = [
 export class CropPlannerCard extends LitElement {
   private _hass!: HomeAssistant;
   private _config!: CropPlannerCardConfig;
-  private _cards: HaCard[] = [];
+  private _card: HaCard | null = null;
   private _harvestCard: HaCard | null = null;
   private _cardsReady = false;
   private _lastAiState: string | undefined;
   private _cropEntityIds: string[] = [];
+  private _lastRelevantSnapshot = '';
 
   @state() private _showAddCropDialog = false;
   @state() private _showMoreInfoDialog = false;
   @state() private _moreInfoEntityId = '';
 
+  private _relevantSnapshot(hass: HomeAssistant): string {
+    const cropStates = this._cropEntityIds.map((id) => `${id}:${hass.states[id]?.state ?? ''}`).join(',');
+    const aiState = hass.states[AI_STATE_ENTITY_ID]?.state ?? '';
+    return `${cropStates}|${aiState}`;
+  }
+
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     if (!this._cardsReady) return;
 
-    this._cards.forEach((card) => (card.hass = hass));
-
     const aiState = hass.states[AI_STATE_ENTITY_ID]?.state;
+    const snapshot = this._relevantSnapshot(hass);
+
+    if (snapshot === this._lastRelevantSnapshot) return;
+    this._lastRelevantSnapshot = snapshot;
+
+    if (this._card) this._card.hass = hass;
+
     if (aiState !== this._lastAiState) {
       this._lastAiState = aiState;
       if (aiState === 'idle' && this._harvestCard) this._harvestCard.hass = hass;
@@ -69,7 +81,7 @@ export class CropPlannerCard extends LitElement {
     const currentCropEntityIds = Object.keys(hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     if (currentCropEntityIds.length !== this._cropEntityIds.length) {
       this._cropEntityIds = currentCropEntityIds;
-      this._cards[0].setConfig(this._buildVerticalStackConfig());
+      this._card?.setConfig(this._buildVerticalStackConfig());
     }
   }
 
@@ -165,13 +177,14 @@ export class CropPlannerCard extends LitElement {
     this._cropEntityIds = Object.keys(this._hass.states).filter((id) => id.startsWith(`${CROP_DOMAIN}.`));
     const helpers = await (window as unknown as { loadCardHelpers: () => Promise<CardHelpers> }).loadCardHelpers();
 
-    this._cards = [helpers.createCardElement(this._buildVerticalStackConfig())];
+    this._card = helpers.createCardElement(this._buildVerticalStackConfig());
     this._cardsReady = true;
     this._lastAiState = this._hass.states[AI_STATE_ENTITY_ID]?.state;
+    this._lastRelevantSnapshot = this._relevantSnapshot(this._hass);
 
     const root = this.shadowRoot!.getElementById('root')!;
-    this._cards[0].hass = this._hass;
-    root.appendChild(this._cards[0]);
+    this._card.hass = this._hass;
+    root.appendChild(this._card);
 
     this.shadowRoot!.addEventListener('ll-custom', (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -186,7 +199,7 @@ export class CropPlannerCard extends LitElement {
 
     // Wait for the vertical-stack to render its children before grabbing the reference
     await new Promise((resolve) => setTimeout(resolve, 0));
-    this._harvestCard = this._cards[0].shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
+    this._harvestCard = this._card.shadowRoot?.querySelector('crop-planner-harvest-card') ?? null;
   }
 
   render() {
