@@ -4,14 +4,14 @@
 
 - **`main` is protected** — never commit directly. All changes go through a dedicated branch and are merged via a GitHub PR reviewed and approved by the project owner.
 - Branch names follow the pattern `<type>/<short-description>`:
-  - `feat/` — new features
+  - `feature/` — new features
   - `fix/` — bug fixes
   - `chore/` — maintenance, deps, config
 - Always create branches from an up-to-date `main`:
 
 ```bash
 git checkout main && git pull
-git checkout -b feat/my-feature
+git checkout -b feature/my-feature
 ```
 
 ## Pre-commit checklist
@@ -39,7 +39,7 @@ Then run `yarn start` in this repo to rebuild on file changes and serve on port 
 
 PR titles must be prefixed with the branch type, matching the branch prefix:
 
-- `feat: <description>` — for `feat/` branches
+- `feat: <description>` — for `feature/` branches
 - `fix: <description>` — for `fix/` branches
 - `chore: <description>` — for `chore/` branches
 
