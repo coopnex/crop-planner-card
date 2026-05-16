@@ -7,7 +7,7 @@ usage() {
   echo ""
   echo "  --bump   Version bump type (major, minor, patch, snapshot)"
   echo "  --pre    Pre-release suffix (e.g. RC1, beta-1); required on non-main branches"
-  echo "  --yes    Skip confirmation prompt"
+  echo "  --yes    Skip all interactive prompts (stable release on main; requires --pre on other branches)"
   exit 1
 }
 
@@ -85,9 +85,16 @@ echo ""
 if [[ -n "$PRE_SUFFIX" ]]; then
   NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
 elif $IS_MAIN; then
-  read -rp "Enter pre-release suffix (e.g. RC1, beta-1) or leave empty for a stable release: " PRE_SUFFIX
-  [[ -n "$PRE_SUFFIX" ]] && NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
+  if ! $YES; then
+    read -rp "Enter pre-release suffix (e.g. RC1, beta-1) or leave empty for a stable release: " PRE_SUFFIX
+    [[ -n "$PRE_SUFFIX" ]] && NEW_VERSION="$NEW_VERSION-$PRE_SUFFIX"
+  fi
+  # --yes with no --pre on main → stable release (no suffix)
 else
+  if $YES; then
+    echo "Error: --pre is required on non-main branches when using --yes." >&2
+    exit 1
+  fi
   while true; do
     read -rp "Enter pre-release suffix (e.g. RC1, beta-1): " PRE_SUFFIX
     [[ -n "$PRE_SUFFIX" ]] && break
