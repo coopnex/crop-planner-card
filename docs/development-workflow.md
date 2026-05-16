@@ -84,3 +84,14 @@ script/release.sh
 
 - When releasing from any branch other than `main`, `--pre` is mandatory — the script will not proceed without it.
 - Use `snapshot` as the bump type when the base version should stay the same and only the pre-release suffix changes (e.g. going from `0.6.0-beta-1` to `0.6.0-beta-2`).
+
+### Pre-release lifecycle
+
+When a pre-release has been tested and approved and the PR is ready to merge, **revert `package.json` to the version on `main`** before merging. The stable release version is set later on `main` via the release script after the PR is merged.
+
+```bash
+# Restore the version that's on main
+git show main:package.json | grep '"version"'   # confirm the target version
+# Edit package.json manually, then commit:
+git commit package.json -m "chore: Restore version to <main-version> before merge"
+```
