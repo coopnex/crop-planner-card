@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+See [docs/development-workflow.md](docs/development-workflow.md) for branching, pre-commit checks, live verification, PR hygiene, and release procedures.
+
 ## Commands
 
 ```bash
