@@ -37,7 +37,15 @@ Then run `yarn start` in this repo to rebuild on file changes and serve on port 
 
 ## Pushing and PRs
 
-After pushing a branch, ensure the GitHub PR description accurately reflects the actual changes. Update it if the branch diverges from the original description during development.
+PR titles must be prefixed with the branch type, matching the branch prefix:
+
+- `feat: <description>` — for `feat/` branches
+- `fix: <description>` — for `fix/` branches
+- `chore: <description>` — for `chore/` branches
+
+Examples: `feat: Add crop detail view`, `fix: Correct logbook mount time`, `chore: Refactor service logic`.
+
+After pushing, ensure the PR description accurately reflects the actual changes. Update it if the branch diverges from the original description during development.
 
 ## Releases
 
