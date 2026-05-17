@@ -1,9 +1,26 @@
 {
-  "crop": {
-    "more-info": {
-      "lifecycle": "Cicle de vida",
-      "logbook": "Activitat"
-    }
+  "button": {
+    "add_crop": "Afegir cultiu",
+    "generate_chores": "Generar tasques",
+    "enrich_crops": "Enriquir cultius"
+  },
+  "popup": {
+    "add_crop_title": "Afegir nou cultiu",
+    "add_crop_submit": "Afegir cultiu",
+    "add_crop_success": "Cultiu afegit correctament!",
+    "field_name": "Nom",
+    "field_species": "Pista d'espècie (opcional)",
+    "field_quantity": "Quantitat",
+    "search_species": "Cercar espècie",
+    "select_species_title": "Seleccionar espècie",
+    "select_species_label": "Espècie",
+    "no_species": "— Cap —",
+    "refine_search": "Refinar cerca",
+    "refine_search_button": "Cercar",
+    "back": "Enrere",
+    "searching": "Cercant…",
+    "species_saved": "Espècie actualitzada!",
+    "confirm_species": "Confirmar"
   },
   "more_info": {
     "lifecycle": "Cicle de vida",
