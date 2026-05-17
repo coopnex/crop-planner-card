@@ -17,6 +17,13 @@ const PHASE_ICONS: Record<string, string> = {
   harvest: '🍂',
 };
 
+const STATE_LABELS: Record<string, string> = {
+  sowing: 'Sowing',
+  germination: 'Germination',
+  flowering: 'Flowering',
+  harvest: 'Harvest',
+};
+
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const REF_YEAR = 2024;
 const YEAR_START = new Date(REF_YEAR, 0, 1).getTime();
@@ -100,17 +107,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       margin: -24px -24px 16px;
       width: calc(100% + 48px);
     }
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .name {
-      font-size: 1.3em;
-      font-weight: 600;
-      flex: 1;
-    }
     .phase-badge {
       display: flex;
       align-items: center;
@@ -192,21 +188,16 @@ export class CropPlannerMoreInfoDialog extends LitElement {
     const phases = resolvePhases(attrs.phases);
     const currentMonth = new Date().getMonth();
     const phaseIcon = PHASE_ICONS[state] ?? '';
-    const phaseLabel = state !== 'ok' ? state : '';
+    const phaseLabel = STATE_LABELS[state] ?? '';
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
         <div>
           ${attrs.entity_picture ? html`<img class="hero" src="${attrs.entity_picture}" alt="${name}" />` : nothing}
-          <div class="header">
-            <span class="name">${name}</span>
-            ${phaseLabel ? html`<span class="phase-badge">${phaseIcon} ${phaseLabel}</span>` : nothing}
-          </div>
           <div class="details">
+            ${phaseLabel ? html`<span class="phase-badge">${phaseIcon} ${phaseLabel}</span>` : nothing}
             ${attrs.species ? html`<span>🔬 ${attrs.species}</span>` : nothing}
-            ${attrs.quantity != null
-              ? html`<span>🌿 ${attrs.quantity} plant${attrs.quantity !== 1 ? 's' : ''}</span>`
-              : nothing}
+            ${attrs.quantity != null ? html`<span>🌿 ${attrs.quantity}</span>` : nothing}
           </div>
           ${phases.length > 0
             ? html`
@@ -217,7 +208,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
                     (phase) => html`
                       <div
                         class="phase-segment"
-                        title="${phase.name}"
+                        title="${STATE_LABELS[phase.name] ?? phase.name}"
                         style="left:${phase.startPct}%;width:${phase.endPct -
                         phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
                       ></div>
