@@ -4,5 +4,9 @@
       "lifecycle": "Ciclo de vida",
       "logbook": "Actividad"
     }
+  },
+  "more_info": {
+    "lifecycle": "Ciclo de vida",
+    "logbook": "Actividad"
   }
 }

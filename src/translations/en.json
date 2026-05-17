@@ -4,5 +4,9 @@
       "lifecycle": "Lifecycle",
       "logbook": "Logbook"
     }
+  },
+  "more_info": {
+    "lifecycle": "Lifecycle",
+    "logbook": "Logbook"
   }
 }
