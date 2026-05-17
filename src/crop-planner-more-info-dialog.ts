@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { CropAttributes, HomeAssistant } from './types';
+import { t } from './translations';
 
 const PHASE_COLORS: Record<string, string> = {
   sowing: '#a8d4a5',
@@ -188,7 +189,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
         this.hass.localize(`state.default.${state}`) ||
         state
       : '';
-    const lifecycleLabel = this.hass.localize('component.crop.ui.lifecycle') || 'Lifecycle';
+    const lifecycleLabel = t(this.hass, 'lifecycle');
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
