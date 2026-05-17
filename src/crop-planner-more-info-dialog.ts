@@ -173,9 +173,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       font-weight: 700;
       color: var(--primary-color);
     }
-    .logbook-label {
-      margin-top: 16px;
-    }
   `;
 
   render() {
@@ -232,7 +229,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
             : nothing}
           ${this.open && this.entityId
             ? html`
-                <div class="timeline-label logbook-label">Logbook</div>
                 <ha-logbook
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}
