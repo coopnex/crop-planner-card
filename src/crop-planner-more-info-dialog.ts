@@ -17,13 +17,6 @@ const PHASE_ICONS: Record<string, string> = {
   harvest: '🍂',
 };
 
-const STATE_LABELS: Record<string, string> = {
-  sowing: 'Sowing',
-  germination: 'Germination',
-  flowering: 'Flowering',
-  harvest: 'Harvest',
-};
-
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const REF_YEAR = 2024;
 const YEAR_START = new Date(REF_YEAR, 0, 1).getTime();
@@ -159,6 +152,9 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       width: 1px;
       background: rgba(0, 0, 0, 0.08);
     }
+    .logbook-label {
+      margin-top: 16px;
+    }
     .months-row {
       display: flex;
       margin-top: 2px;
@@ -185,27 +181,30 @@ export class CropPlannerMoreInfoDialog extends LitElement {
     const phases = resolvePhases(attrs.phases);
     const currentMonth = new Date().getMonth();
     const phaseIcon = PHASE_ICONS[state] ?? '';
-    const phaseLabel = STATE_LABELS[state] ?? '';
+    const phaseLabel = state ? this.hass.localize(`component.crop.entity.crop.crop.state.${state}`) || state : '';
+    const lifecycleLabel = this.hass.localize('component.crop.ui.lifecycle') || 'Lifecycle';
+    const logbookLabel = this.hass.localize('ui.panel.logbook.title') || 'Logbook';
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
         <div>
           ${attrs.entity_picture ? html`<img class="hero" src="${attrs.entity_picture}" alt="${name}" />` : nothing}
+          ${phaseLabel ? html`<div class="details">${phaseIcon} ${phaseLabel}</div>` : nothing}
           <div class="details">
-            ${phaseLabel ? html`<span class="phase-badge">${phaseIcon} ${phaseLabel}</span>` : nothing}
             ${attrs.species ? html`<span>🔬 ${attrs.species}</span>` : nothing}
             ${attrs.quantity != null ? html`<span>🌿 ${attrs.quantity}</span>` : nothing}
           </div>
           ${phases.length > 0
             ? html`
-                <div class="timeline-label">Lifecycle</div>
+                <div class="timeline-label">${lifecycleLabel}</div>
                 <div class="bar-track">
                   ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
                   ${phases.map(
                     (phase) => html`
                       <div
                         class="phase-segment"
-                        title="${STATE_LABELS[phase.name] ?? phase.name}"
+                        title="${this.hass.localize(`component.crop.entity.crop.crop.state.${phase.name}`) ||
+                        phase.name}"
                         style="left:${phase.startPct}%;width:${phase.endPct -
                         phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
                       ></div>
@@ -229,6 +228,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
             : nothing}
           ${this.open && this.entityId
             ? html`
+                <div class="timeline-label logbook-label">${logbookLabel}</div>
                 <ha-logbook
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}
