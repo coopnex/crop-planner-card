@@ -21,5 +21,9 @@
     "searching": "Buscando…",
     "species_saved": "¡Especie actualizada!",
     "confirm_species": "Confirmar"
+  },
+  "more_info": {
+    "lifecycle": "Ciclo de vida",
+    "logbook": "Actividad"
   }
 }

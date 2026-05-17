@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { CropAttributes, HomeAssistant } from './types';
+import { localize } from './localize';
 
 const PHASE_COLORS: Record<string, string> = {
   sowing: '#a8d4a5',
@@ -100,16 +101,10 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       margin: -24px -24px 16px;
       width: calc(100% + 48px);
     }
-    .header {
+    .state-row {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .name {
-      font-size: 1.3em;
-      font-weight: 600;
-      flex: 1;
+      justify-content: flex-end;
+      margin-bottom: 8px;
     }
     .phase-badge {
       display: flex;
@@ -177,9 +172,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       font-weight: 700;
       color: var(--primary-color);
     }
-    .logbook-label {
-      margin-top: 16px;
-    }
   `;
 
   render() {
@@ -192,32 +184,37 @@ export class CropPlannerMoreInfoDialog extends LitElement {
     const phases = resolvePhases(attrs.phases);
     const currentMonth = new Date().getMonth();
     const phaseIcon = PHASE_ICONS[state] ?? '';
-    const phaseLabel = state !== 'ok' ? state : '';
+    const phaseLabel = state
+      ? this.hass.localize(`component.crop.entity.crop.crop.state.${state}`) ||
+        this.hass.localize(`state.default.${state}`) ||
+        state
+      : '';
+    const lang = this.hass.language;
+    const lifecycleLabel = localize('more_info.lifecycle', lang);
+    const logbookLabel = localize('more_info.logbook', lang);
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
         <div>
           ${attrs.entity_picture ? html`<img class="hero" src="${attrs.entity_picture}" alt="${name}" />` : nothing}
-          <div class="header">
-            <span class="name">${name}</span>
-            ${phaseLabel ? html`<span class="phase-badge">${phaseIcon} ${phaseLabel}</span>` : nothing}
-          </div>
+          ${phaseLabel
+            ? html`<div class="state-row"><span class="phase-badge">${phaseIcon} ${phaseLabel}</span></div>`
+            : nothing}
           <div class="details">
             ${attrs.species ? html`<span>🔬 ${attrs.species}</span>` : nothing}
-            ${attrs.quantity != null
-              ? html`<span>🌿 ${attrs.quantity} plant${attrs.quantity !== 1 ? 's' : ''}</span>`
-              : nothing}
+            ${attrs.quantity != null ? html`<span>🌿 ${attrs.quantity}</span>` : nothing}
           </div>
           ${phases.length > 0
             ? html`
-                <div class="timeline-label">Lifecycle</div>
+                <div class="timeline-label">${lifecycleLabel}</div>
                 <div class="bar-track">
                   ${MONTHS.map((_, i) => html`<div class="month-tick" style="left:${(i / 12) * 100}%"></div>`)}
                   ${phases.map(
                     (phase) => html`
                       <div
                         class="phase-segment"
-                        title="${phase.name}"
+                        title="${this.hass.localize(`component.crop.entity.crop.crop.state.${phase.name}`) ||
+                        phase.name}"
                         style="left:${phase.startPct}%;width:${phase.endPct -
                         phase.startPct}%;background:${PHASE_COLORS[phase.name] ?? '#888'}"
                       ></div>
@@ -241,7 +238,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
             : nothing}
           ${this.open && this.entityId
             ? html`
-                <div class="timeline-label logbook-label">Logbook</div>
+                <div class="timeline-label">${logbookLabel}</div>
                 <ha-logbook
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}

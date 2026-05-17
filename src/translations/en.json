@@ -21,5 +21,9 @@
     "searching": "Searching…",
     "species_saved": "Species updated!",
     "confirm_species": "Confirm"
+  },
+  "more_info": {
+    "lifecycle": "Lifecycle",
+    "logbook": "Logbook"
   }
 }
