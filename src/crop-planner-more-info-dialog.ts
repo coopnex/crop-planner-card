@@ -152,9 +152,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       width: 1px;
       background: rgba(0, 0, 0, 0.08);
     }
-    .logbook-label {
-      margin-top: 16px;
-    }
     .months-row {
       display: flex;
       margin-top: 2px;
@@ -181,9 +178,12 @@ export class CropPlannerMoreInfoDialog extends LitElement {
     const phases = resolvePhases(attrs.phases);
     const currentMonth = new Date().getMonth();
     const phaseIcon = PHASE_ICONS[state] ?? '';
-    const phaseLabel = state ? this.hass.localize(`component.crop.entity.crop.crop.state.${state}`) || state : '';
+    const phaseLabel = state
+      ? this.hass.localize(`component.crop.entity.crop.crop.state.${state}`) ||
+        this.hass.localize(`state.default.${state}`) ||
+        state
+      : '';
     const lifecycleLabel = this.hass.localize('component.crop.ui.lifecycle') || 'Lifecycle';
-    const logbookLabel = this.hass.localize('ui.panel.logbook.title') || 'Logbook';
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
@@ -228,7 +228,6 @@ export class CropPlannerMoreInfoDialog extends LitElement {
             : nothing}
           ${this.open && this.entityId
             ? html`
-                <div class="timeline-label logbook-label">${logbookLabel}</div>
                 <ha-logbook
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}
