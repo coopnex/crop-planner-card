@@ -189,7 +189,8 @@ export class CropPlannerMoreInfoDialog extends LitElement {
         this.hass.localize(`state.default.${state}`) ||
         state
       : '';
-    const lifecycleLabel = t(this.hass, 'lifecycle');
+    const lifecycleLabel = t(this.hass, 'crop.more-info.lifecycle');
+    const logbookLabel = t(this.hass, 'crop.more-info.logbook');
 
     return html`
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
@@ -240,6 +241,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}
                   .time=${{ recent: 30 * 24 * 3600 }}
+                  .header=${logbookLabel}
                 ></ha-logbook>
               `
             : nothing}

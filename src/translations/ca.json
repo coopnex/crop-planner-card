@@ -1,3 +1,8 @@
 {
-  "lifecycle": "Cicle de vida"
+  "crop": {
+    "more-info": {
+      "lifecycle": "Cicle de vida",
+      "logbook": "Activitat"
+    }
+  }
 }

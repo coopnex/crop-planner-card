@@ -1,3 +1,8 @@
 {
-  "lifecycle": "Lifecycle"
+  "crop": {
+    "more-info": {
+      "lifecycle": "Lifecycle",
+      "logbook": "Logbook"
+    }
+  }
 }
