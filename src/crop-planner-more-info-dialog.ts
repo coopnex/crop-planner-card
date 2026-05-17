@@ -242,7 +242,7 @@ export class CropPlannerMoreInfoDialog extends LitElement {
                   .hass=${this.hass}
                   .entityIds=${[this.entityId]}
                   .time=${{ recent: 30 * 24 * 3600 }}
-                  .title=${logbookLabel}
+                  title=${logbookLabel}
                 ></ha-logbook>
               `
             : nothing}
