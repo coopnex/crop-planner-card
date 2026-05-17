@@ -100,6 +100,11 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       margin: -24px -24px 16px;
       width: calc(100% + 48px);
     }
+    .state-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
     .phase-badge {
       display: flex;
       align-items: center;
@@ -189,7 +194,9 @@ export class CropPlannerMoreInfoDialog extends LitElement {
       <ha-adaptive-dialog ?open=${this.open} header-title=${name} @closed=${this._onHaDialogClosed}>
         <div>
           ${attrs.entity_picture ? html`<img class="hero" src="${attrs.entity_picture}" alt="${name}" />` : nothing}
-          ${phaseLabel ? html`<div class="details">${phaseIcon} ${phaseLabel}</div>` : nothing}
+          ${phaseLabel
+            ? html`<div class="state-row"><span class="phase-badge">${phaseIcon} ${phaseLabel}</span></div>`
+            : nothing}
           <div class="details">
             ${attrs.species ? html`<span>🔬 ${attrs.species}</span>` : nothing}
             ${attrs.quantity != null ? html`<span>🌿 ${attrs.quantity}</span>` : nothing}
