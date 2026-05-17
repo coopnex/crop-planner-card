@@ -1,25 +1,3 @@
 {
-  "button": {
-    "add_crop": "Añadir cultivo",
-    "generate_chores": "Generar tareas",
-    "enrich_crops": "Enriquecer cultivos"
-  },
-  "popup": {
-    "add_crop_title": "Añadir nuevo cultivo",
-    "add_crop_submit": "Añadir cultivo",
-    "add_crop_success": "¡Cultivo añadido correctamente!",
-    "field_name": "Nombre",
-    "field_species": "Pista de especie (opcional)",
-    "field_quantity": "Cantidad",
-    "search_species": "Buscar especie",
-    "select_species_title": "Seleccionar especie",
-    "select_species_label": "Especie",
-    "no_species": "— Ninguna —",
-    "refine_search": "Refinar búsqueda",
-    "refine_search_button": "Buscar",
-    "back": "Atrás",
-    "searching": "Buscando…",
-    "species_saved": "¡Especie actualizada!",
-    "confirm_species": "Confirmar"
-  }
+  "lifecycle": "Ciclo de vida"
 }
